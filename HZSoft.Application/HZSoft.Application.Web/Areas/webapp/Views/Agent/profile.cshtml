@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>个人资料-全国靓号</title>
+    <meta name="Keywords" content="全国靓号" />
+    <meta name="Description" content="全国靓号" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="shortcut icon" href="/static/agent/wap/images/favicon.ico">
+    <link rel="stylesheet" href="/static/agent/wap/styles/base.css?v=05">
+    <link rel="stylesheet" href="/static/agent/wap/styles/customer.css?v=098">
+</head>
+
+<body class="auto_width">
+    <article class="container main_customer_profile">
+
+
+
+        <div class="main" id="app" :class="{edit_mode:isEditing}" v-cloak v-if="isFetched">
+            <section class="top">
+                <div class="mask_wrap">
+                    <p>点击上传</p>
+                    <input type="file" accept="image/*" class="input_upload" @@change="selectImage">
+                </div>
+                <div class="div_img">
+                    <img :src="showImg" alt="" v-if="showImg">
+                    <img :src="userInfo.banner|banner" alt="" v-else @@click="isShowCoverImg=true">
+                </div>
+            </section>
+            <section class="handler_wrap">
+                <h2>用户信息</h2>
+                <h3>
+                    <span>真实姓名</span>
+                    <input v-model="realname" placeholder="请输入真实姓名" maxlength="20">
+                    <strong>{{ userInfo.realname }}</strong>
+                </h3>
+                <h3>
+                    <span>联系电话</span>
+                    <input v-model="contact" placeholder="请输入联系电话" maxlength="20">
+                    <strong>{{ userInfo.contact }}</strong>
+                </h3>
+                <h3>
+                    <span>支付宝账号</span>
+                    <input v-model="alipay" placeholder="请输入支付宝账号" maxlength="40">
+                    <strong>{{ userInfo.alipay }}</strong>
+                </h3>
+            </section>
+            <section class="btn_wrap">
+                <button class="edit_btn" @@click="isEditing=true">编辑</button>
+                <button class="save_btn" @@click="saveUserInfo">保存</button>
+                <button class="cancel_btn" @@click="isEditing=false">取消</button>
+            </section>
+            <transition name="cover_img">
+                <div class="cover_img" @@touchmove.prevent v-if="isShowCoverImg" @@click="isShowCoverImg=false">
+                    <img :src="userInfo.banner|banner" alt="">
+                </div>
+            </transition>
+        </div>
+
+
+    </article>
+    <script>
+
+    </script>
+    <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.6.11/vue.min.js"></script>
+    <script src="/static/agent/wap/scripts/app/customerMixins.js?v=072"></script>
+    <script src="/static/agent/wap/scripts/common/base.js?v=062"></script>
+    <script src="/static/agent/wap/scripts/app/api.js?v=062"></script>
+
+
+
+
+
+    <script>
+
+
+        function req(uri, data = {}, method = '0', url = "/webapp/agentApi/") {
+
+            data._token = "Lt4gurSrgcO7MNPYv0k4AmQ4Pb8ObD2hvr4tqqCa";
+
+            let res = new Promise(function (resolve, reject) {
+
+                $.ajax({
+                    url: url + uri,
+                    type: method == 0 ? 'post' : 'get',
+                    data: data,
+                    success: function (res) {
+                        resolve(res);
+                    },
+                    error: function (error) {
+                        reject(error);
+                    }
+                })
+            });
+
+            return res;
+        };
+
+        function cl(str) {
+            console.log(str);
+        }
+
+
+    </script>
+
+    <script src="/static/agent/wap/scripts/common/clipboard.min.js"></script>
+
+
+    <script src="/static/agent/wap/scripts/app/customer/profile.js?v=02"></script>
+
+</body>
+</html>

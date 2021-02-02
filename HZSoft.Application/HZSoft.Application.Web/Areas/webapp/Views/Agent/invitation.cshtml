@@ -1,0 +1,122 @@
+﻿@model  HZSoft.Application.Entity.BaseManage.Wechat_AgentEntity
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>邀请代理</title>
+    <meta name="Keywords" content="全国靓号">
+    <meta name="Description" content="全国靓号">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="shortcut icon" href="/static/agent/wap/images/favicon.ico">
+    <link rel="stylesheet" href="/static/agent/wap/styles/base.css?v=05">
+    <link rel="stylesheet" href="/static/agent/wap/styles/customer.css?v=098">
+    <style id="__WXWORK_INNER_SCROLLBAR_CSS">
+        ::-webkit-scrollbar {
+            width: 12px !important;
+            height: 12px !important;
+        }
+
+        ::-webkit-scrollbar-track:vertical {
+        }
+
+        ::-webkit-scrollbar-thumb:vertical {
+            background-color: rgba(136, 141, 152, 0.5) !important;
+            border-radius: 10px !important;
+            background-clip: content-box !important;
+            border: 2px solid transparent !important;
+        }
+
+        ::-webkit-scrollbar-track:horizontal {
+        }
+
+        ::-webkit-scrollbar-thumb:horizontal {
+            background-color: rgba(136, 141, 152, 0.5) !important;
+            border-radius: 10px !important;
+            background-clip: content-box !important;
+            border: 2px solid transparent !important;
+        }
+
+        ::-webkit-resizer {
+            display: none !important;
+        }
+    </style>
+</head>
+<body class="auto_width">
+    <article class="container main_customer_invitation">
+
+        <div class="main" id="app">
+            <section class="top">
+                <h2>当前等级：<strong>@Model.LV</strong></h2>
+                <h3>您再邀请&nbsp;<strong>@ViewBag.Count</strong>&nbsp;个普通代理即可升级为 @ViewBag.LV2</h3>
+            </section>
+            <section class="handler_wrap">
+                <p class="input_wrap">
+                    <label>邀请链接：</label>
+                    <input type="text" id="invitationRrl" value="https://shop.jnlxsm.net/webapp/agent/index?id=@Model.Id">
+                </p>
+                <p class="btn_wrap">
+                    <button data-clipboard-target="#invitationRrl" class="copy">复制链接</button>
+                </p>
+                <p class="btn_wrap">
+                    <!--?xml version="1.0" encoding="UTF-8"?-->
+                    <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                        <g id="qrcode" />
+                    </svg>
+                </p>
+            </section>
+        </div>
+
+
+    </article>
+    <script></script>
+    <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.6.11/vue.min.js"></script>
+    <script src="/static/agent/wap/scripts/app/customerMixins.js?v=072"></script>
+    <script src="/static/agent/wap/scripts/common/base.js?v=062"></script>
+    <script src="/static/agent/wap/scripts/app/api.js?v=062"></script>
+    <script src="~/static/agent/wap/scripts/common/qrcode.js"></script>
+
+
+    <script>
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            width: 100,
+            height: 100,
+            useSVG: true
+        });
+        qrcode.makeCode($("#invitationRrl").val());
+
+        function req(uri, data = {}, method = '0', url = "/webapp/agentApi/") {
+
+            data._token = "kHmCcXqwCJ5tIxBsdG0EStN79sAdnTBavTGBFaw8";
+
+            let res = new Promise(function (resolve, reject) {
+
+                $.ajax({
+                    url: url + uri,
+                    type: method == 0 ? 'post' : 'get',
+                    data: data,
+                    success: function (res) {
+                        resolve(res);
+                    },
+                    error: function (error) {
+                        reject(error);
+                    }
+                })
+            });
+
+            return res;
+        };
+
+        function cl(str) {
+            console.log(str);
+        }</script>
+
+    <script src="/static/agent/wap/scripts/common/clipboard.min.js"></script>
+    <script src="/static/agent/wap/scripts/common/base.js?v=01"></script>
+    <script src="/static/agent/wap/scripts/app/customer/invitation.js?v=01"></script>
+
+</body>
+</html>

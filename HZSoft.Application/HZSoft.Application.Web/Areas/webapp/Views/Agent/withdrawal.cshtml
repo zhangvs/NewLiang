@@ -1,0 +1,143 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>代理中心-利新科技</title>
+    <meta name="Keywords" content="全国靓号" />
+    <meta name="Description" content="全国靓号" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="shortcut icon" href="/static/agent/wap/images/favicon.ico">
+    <link rel="stylesheet" href="/static/agent/wap/styles/base.css?v=05">
+    <link rel="stylesheet" href="/static/agent/wap/styles/customer.css?v=098">
+</head>
+
+<body class="auto_width">
+    <article class="container main_customer_withdrawal">
+
+
+
+
+
+        <div class="main" id="app">
+            <section class="top">
+                <h3>可提现金额</h3>
+                <h4><strong id="balance">@ViewBag.profit</strong></h4>
+            </section>
+            <section class="handler">
+                <p class="input_wrap flex">
+                    <label for="cashMoney">提现金额</label>
+                    <input type="number" id="cashMoney" class="flex_item" placeholder=".00">
+                    <i>元</i>
+                </p>
+                <div class="btn_wrap">
+                    <button id="submit">申请提现</button>
+                </div>
+            </section>
+        </div>
+
+
+    </article>
+    <script>
+
+    </script>
+    <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.6.11/vue.min.js"></script>
+    <script src="/static/agent/wap/scripts/app/customerMixins.js?v=072"></script>
+    <script src="/static/agent/wap/scripts/common/base.js?v=062"></script>
+    <script src="/static/agent/wap/scripts/app/api.js?v=062"></script>
+
+
+
+
+
+    <script>
+
+
+        function req(uri, data = {}, method = '0', url = "/webapp/agentApi/") {
+
+            data._token = "RoygJcI8KJqeysCjuRMsqQtxrMmSHysjffDK6laH";
+
+            let res = new Promise(function (resolve,reject){
+
+                $.ajax({
+                    url:url + uri,
+                    type:method == 0 ? 'post' : 'get',
+                    data:data,
+                    success:function (res)
+                    {
+                        resolve(res);
+                    },
+                    error:function (error)
+                    {
+                        reject(error);
+                    }
+                })
+            });
+
+            return res;
+        };
+
+        function cl(str)
+        {
+            console.log(str);
+        }
+
+
+    </script>
+    <script>
+    $('#submit').click(function(){
+
+        let cashNum = parseInt($('#cashMoney').val());
+        let curBalance = parseInt($('#balance').text());
+
+
+        if(curBalance< 100 || curBalance == 0)
+        {
+            $.toast('提现金额最少100元,当前可提现金额不足');
+                return false;
+        }
+        if(!cashNum || cashNum< 100 || cashNum > curBalance)
+        {
+            $.toast('提现金额最少100元,且不能超过'+curBalance);
+            $("#cashMoney").focus();
+            return false;
+        }
+
+        $.ajax({
+            url:'/webapp/agent/withdraw',
+            type:'post',
+            dataType:'json',
+            data:{cashNum:cashNum},
+            success:function (res){
+                console.log(res)
+
+                if(res.code == 401)
+                {
+                    $.toast(res.msg);
+                    location.href = '/webapp/agent/profile';
+                    return false;
+                }
+                if(res.code != 200)
+                {
+                    $.toast(res.msg);
+                    return false;
+                }
+
+                $.toast('申请成功,请等待审核');
+                setTimeout(function(){
+                    location.href = '/webapp/agent/withdrawLogs';
+                },2000);
+            }
+        })
+
+
+    });
+    </script>
+
+
+</body>
+</html>

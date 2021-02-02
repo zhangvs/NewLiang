@@ -1,0 +1,54 @@
+﻿@{
+    ViewBag.Title = "用户管理";
+    Layout = "~/Views/Shared/_FlowForm.cshtml";
+}
+<script src="~/static/agent/wap/scripts/common/qrcode.js"></script>
+<script>
+    var keyValue = request('keyValue');
+    $(function () {
+        initControl();
+    })
+    //初始化控件
+    function initControl() {
+        //获取表单
+        if (!!keyValue) {
+            $.SetForm({
+                url: "../../BaseManage/User/GetFormJson",
+                param: { keyValue: keyValue },
+                success: function (data) {
+                    $("#UserId").val("https://shop.jnlxsm.net/webapp/agent/Create?keyValue=" + data.UserId);
+                }
+            });
+        }
+
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            width: 100,
+            height: 100,
+            useSVG: true
+        });
+        qrcode.makeCode($("#UserId").val());
+    }
+</script>
+<div style="margin-left: 10px; margin-right: 10px;">
+    <table class="form">
+        <tr>
+            <td class="formValue">
+                <input id="UserId" type="text" class="form-control" />
+            </td>
+        </tr>
+        <tr>
+            <td class="formValue">
+                请用该员工的微信扫码，或打开上面的连接
+            </td>
+        </tr>
+        <tr>
+            <td class="formValue">
+                <!--?xml version="1.0" encoding="UTF-8"?-->
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <g id="qrcode" />
+                </svg>
+            </td>
+        </tr>
+    </table>
+</div>
+

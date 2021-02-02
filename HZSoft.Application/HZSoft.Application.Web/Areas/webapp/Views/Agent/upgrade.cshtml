@@ -1,0 +1,187 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>提升代理等级-全国靓号</title>
+    <meta name="Keywords" content="全国靓号" />
+    <meta name="Description" content="全国靓号" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="shortcut icon" href="/static/agent/wap/images/favicon.ico">
+    <link rel="stylesheet" href="/static/agent/wap/styles/base.css?v=05">
+    <link rel="stylesheet" href="/static/agent/wap/styles/customer.css?v=098">
+</head>
+
+<body class="auto_width">
+    <article class="container main_customer_upgrade">
+
+
+
+        <div class="main" id="app">
+            <section class="desc">
+                <h2>得分销售制度</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>等级</th>
+                            <th>费用（元）</th>
+                            <th>制度</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td>普通代理</td>
+                            <td>0</td>
+                            <td>普通代理0元入驻，分享赚钱</td>
+                        </tr>
+                        <tr>
+                            <td>黄金代理</td>
+                            <td>399</td>
+                            <td>入驻金额399元，享受黄金权益</td>
+                        </tr>
+                        <tr>
+                            <td>钻石代理</td>
+                            <td>1999</td>
+                            <td>钻石权益，享受最高级别分佣，躺赚生活从此开始</td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </section>
+            <section class="handler">
+                <h2>当前代理等级：<strong>普通代理</strong></h2>
+
+
+                <div class="select_wrap flex">
+                    <p>选择升级等级</p>
+                    <p class="inner">
+                        <label class="i_icon levelName">选择目标等级</label>
+                        <select id="level">
+                            <option value="0" data-price="0" data-name="请选择等级">选择等级</option>
+                            <option value="2" data-price="399" data-name="黄金代理" }}>黄金代理</option>
+                            <option value="3" data-price="1999" data-name="钻石代理" }}>钻石代理</option>
+                        </select>
+                    </p>
+                    <p>加盟费：<strong class="price">0</strong>元</p>
+                </div>
+                <div class="btn_wrap">
+                    <button id="submit">立即提升</button>
+                </div>
+            </section>
+        </div>
+
+
+    </article>
+    <script>
+
+    </script>
+    <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.6.11/vue.min.js"></script>
+    <script src="/static/agent/wap/scripts/app/customerMixins.js?v=072"></script>
+    <script src="/static/agent/wap/scripts/common/base.js?v=062"></script>
+    <script src="/static/agent/wap/scripts/app/api.js?v=062"></script>
+
+
+
+
+
+    <script>
+
+
+        function req(uri, data = {}, method = '0', url = "/webapp/agentApi/") {
+
+            data._token = "b2lgpou0zoLX4o4Dq38m3lkqNLAlVxRlTalKAmDy";
+
+            let res = new Promise(function (resolve, reject) {
+
+                $.ajax({
+                    url: url + uri,
+                    type: method == 0 ? 'post' : 'get',
+                    data: data,
+                    success: function (res) {
+                        resolve(res);
+                    },
+                    error: function (error) {
+                        reject(error);
+                    }
+                })
+            });
+
+            return res;
+        };
+
+        function cl(str) {
+            console.log(str);
+        }
+
+
+    </script>
+    <script>
+
+        var curPrice = "0";
+
+        var tid = 0;
+
+        $('#level').change(function () {
+
+            let obj = $('#level').find('option:selected');
+
+            let levelId = obj.attr('value');
+
+            tid = levelId;
+            let price = 0;
+
+            if (levelId == 0) {
+
+            } else {
+                price = parseFloat(obj.attr('data-price')) - parseFloat(curPrice);
+            }
+
+
+            let t = obj.text
+
+
+            $('.levelName').text(obj.attr('data-name'))
+            $('.price').text(price);
+
+
+        });
+
+
+
+        $('#submit').click(function () {
+
+
+            if (!tid) {
+                alert('请选择目标等级');
+
+                return false;
+            }
+
+
+            let url = '/webapp/agent/upgradeLevel?tid=' + tid;
+            location.href = url;
+            // $.ajax({
+            //     url:'/agent/upgradeLevel',
+            //     type:'get',
+            //     dataType:'json',
+            //     data:{_token:"tid:tid},
+            //     success:function (res)
+            //     {
+            //         if(res.code == 400)
+            //         {
+            //             alert(res.msg);
+            //             return false;
+            //         }
+            //     }
+            // })
+
+        });
+    </script>
+
+</body>
+</html>

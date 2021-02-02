@@ -1,0 +1,114 @@
+﻿<!doctype html>
+<html font-size="12px">
+<head>
+    <link rel="stylesheet" href="/themes/simplebootx_mobile/Public/css/jquery-weui.min.css">
+    <link type="text/css" rel="stylesheet" href="https://cdn.staticfile.org/mui/3.7.1/css/mui.min.css">
+    <link rel="stylesheet" href="/themes/simplebootx_mobile/Public/css/weui.min.css">
+
+</head>
+<body>
+    <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/mui/3.7.1/js/mui.min.js"></script>
+
+    <script src="/themes/simplebootx_mobile/Public/js/jquery-weui.min.js"></script>
+
+
+    <script>
+        
+            if (isWeiXin()) {
+                location.href = 'https://shop.jnlxsm.net/webapp/AgentShop/pay?orderno=' + '@ViewBag.orderno';
+            }
+            else {
+                    $.ajax({
+                        url: "/webapp/AgentShop/ajaxorder",
+                        type: 'post',
+                        dataType: 'json',
+                        data: {
+                            orderno: '@ViewBag.orderno'
+                        },
+                        cache: false,
+                        async: false,
+                        dataType: "json",
+                        success: function (resObj) {
+                        if (resObj.code == 200) {
+                            //支付宝
+                            if (@ViewBag.gateway == 1) {
+                                //输出提交表单
+                                $("body").append(resObj.data.form);
+                            }
+                            //微信
+                            if (@ViewBag.gateway == 0) {
+                                //H5支付
+                                if (typeof (resObj.data.mweb_url) != "undefined" && resObj.data.mweb_url != null) {
+                                    location.href = resObj.data.mweb_url;//+ '&redirect_url=' + encodeURIComponent(resObj.data.wx_query_over)
+                                    $.modal({
+                                        text: "支付操作是否已经完成？",
+                                        buttons: [
+                                            { text: "取消支付", className: "default", onClick: function () { $.hideLoading(); } },
+                                            { text: "支付完成", onClick: function () { location.href = resObj.data.wx_query_over; } }
+                                        ]
+                                    });
+                                    return false;
+                                }
+                                else if (typeof (resObj.data.code_url) != "undefined" && resObj.data.code_url != null) {
+                                    //扫码支付
+                                    var qrsrc = '<img src="/WeChatManage/user_index/getPageqr/?pageurl=' + encodeURIComponent(resObj.data.code_url) + '" style="max-width:100%;" />';
+                                    $.modal({
+                                        text: qrsrc,
+                                        buttons: [
+                                            { text: "取消支付", className: "default", onClick: function () { $.hideLoading(); } },
+                                            { text: "支付完成", onClick: function () { location.href = resObj.data.wx_query_over; } }
+                                        ]
+                                    });
+                                    //检测付款状态
+                                    setInterval(function () {
+                                        $.ajax({
+                                            type: "post",
+                                            url: resObj.data.wx_query_href,
+                                            data: '',
+                                            dataType: 'json',
+                                            success: function (result) {
+                                                if (result.status) {
+                                                    //支付成功
+                                                    location.href = resObj.data.wx_query_over;
+                                                } else {
+                                                    console.log("等待付款");
+                                                }
+                                            }
+                                        });
+                                    }, 2000);
+                                }
+                            }
+                        } else {
+                            $.toast(resObj.msg, "forbidden");
+                        }
+                    },
+                    error: function (XMLHttpRequest, textStatus, errorThrown) {
+                        $.toast("提交失败，请重试", "forbidden");
+                    }
+                });
+            }
+
+        function isWeiXin() {
+            var ua = window.navigator.userAgent.toLowerCase();
+            if (ua.match(/MicroMessenger/i) == 'micromessenger') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        ////扫码支付
+        //var qrsrc = '<img src="/WeChatManage/user_index/getPageqr/?pageurl=' + encodeURIComponent("weixin://wxpay/bizpayurl?pr=lixpXgt") + '" style="max-width:100%;" />';
+        //$.modal({
+        //    text: qrsrc,
+        //    buttons: [
+        //        { text: "取消支付", className: "default", onClick: function () { $.hideLoading(); } },
+        //        { text: "支付完成", onClick: function () { location.href = '/webapp/AgentShop/prePayOrder/' + resObj.data.payid; } }
+        //    ]
+        //});
+
+
+    </script>
+
+</body>
+</html>

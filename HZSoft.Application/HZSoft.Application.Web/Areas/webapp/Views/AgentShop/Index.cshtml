@@ -1,0 +1,433 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>首页-全国靓号</title>
+    <meta name="Keywords" content="全国靓号" />
+    <meta name="Description" content="全国靓号" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta http-equiv="Expires" CONTENT="0">
+    <meta http-equiv="Cache-Control" CONTENT="no-cache">
+    <meta http-equiv="Pragma" CONTENT="no-cache">
+    <link rel="shortcut icon" href="/static/default/images/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.staticfile.org/Swiper/5.3.8/css/swiper.min.css">
+    <link rel="stylesheet" href="/static/default/styles/iosSelect.css">
+    <link rel="stylesheet" href="/static/default/styles/base.css?v=01">
+    <link rel="stylesheet" href="/static/default/styles/index.css?v=01">
+    <style>
+        .main_index .main .goods_list .p_item .mobile .flag {
+            background-color: #b50005 !important;
+        }
+
+        .lastorder {
+            position: fixed;
+            bottom: 8px;
+            width: 90%;
+            left: 5%;
+            background: #3e3e3e;
+            color: #FFF;
+            height: 4em;
+            font-size: 1em;
+            line-height: 2em;
+            text-align: center;
+            border-radius: 5px;
+            filter: alpha(Opacity=80);
+            -moz-opacity: 0.8;
+            opacity: 0.8;
+        }
+    </style>
+    <script>
+        var _hmt = _hmt || [];
+        (function () {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?b422fa8a43fc02d1a3ab4a06846b7b3f";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+
+</head>
+
+<body>
+    <article class="container main_index" style="background-color: #FFF">
+        <div class="main">
+            <section class="logo_wrap hide">
+                <a href="/">
+
+                    <img src="/static/default/images/logo.png" alt="logo">
+
+                </a>
+            </section>
+            <section class="banner_wrap">
+
+
+
+
+
+                <img src="@ViewBag.banner" alt="logo">
+
+
+
+
+
+            </section>
+            <div id="indexApp" v-cloak>
+                <section class="middle_wrap">
+                    <div class="search_wrap">
+                        <a href="javascript:void(0);" class="toggle_accuracy" @@click="isAccuracy=!isAccuracy">
+                            <span class="i_icon" :class="{active:isAccuracy}">{{isAccuracy?'精准':'模糊'}}</span>
+                        </a>
+                        <div class="input_wrap single_wrap flex" :class="{active:isSearchInputFocused||search.length}"
+                             v-show="!isAccuracy">
+                            <div class="value_wrap clear_fix" @@click="setPhone(true)">
+                                <i v-for="(val,index) in search" :key="index">{{val}}</i>
+                                <i class="on" v-if="isSearchInputFocused"></i>
+                            </div>
+                            <input type="tel" maxlength="11" autocomplete="off" class="flex_item"
+                                   id="searchInput"
+                                   v-model.trim="search"
+                                   @@focus="isSearchInputFocused=true"
+                                   @@blur="isSearchInputFocused=false">
+                            <span class="placeholder i_icon">输入您喜欢的号码</span>
+                            <span class="clear_icon i_icon" v-show="search.length" @@click="search=''">清除</span>
+                            <button @@click="getData(true)">确定</button>
+                            <a href="javascript:void(0);" class="toggle_tail i_icon" :class="{active:isTail}"
+                               @@click="isTail=!isTail">尾号</a>
+                        </div>
+                        <div class="input_wrap mul_wrap flex" v-show="isAccuracy">
+                            <span class="flex_item">1</span>
+                            <input v-for="(item,idx) of 10"
+                                   type="tel"
+                                   maxlength="1"
+                                   autocomplete="off"
+                                   class="flex_item accuracy_input"
+                                   :key="idx">
+                            <button @@click="getData(true)">搜索</button>
+                        </div>
+                    </div>
+                    <div class="scroll_tips flex" v-if="show_notice" :style="{background:show_notice_background_color}">
+                        <img src="/static/default/images/index/speaker.png" alt="喇叭">
+                        <div class="list_wrap">
+                            <ul :style="scrollTipsStyle">
+                                <li v-for="item of scrollTipsList" v-html="item" :style="{color:show_notice_color}"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="filter_wrap" v-if="show_filter">
+                        <nav class="flex">
+                            <a href="javascript:void(0);" @@click="chooseFilter('chooseArea')">
+                                <span v-html="displayAreaName" class="no_wrap">号码归属地</span>
+                            </a>
+                            <a href="javascript:void(0);" @@click="chooseFilter('isShowFilterSlide')">
+                                <span>号码筛选</span>
+                            </a>
+                            <a href="javascript:void(0);" @@click="chooseFilter('isShowFilterPrice')">
+                                <span>价格筛选</span>
+                            </a>
+                            <a href="javascript:void(0);" @@click="chooseFilter('isShowFilterRegex')">
+                                <span>号码类型</span>
+                            </a>
+                        </nav>
+                        <transition name="fix_nav">
+                            <nav class="flex fix_nav" v-show="isShowFixNav" style="background-color: #fff">
+                                <a href="javascript:void(0);" @@click="chooseFilter('chooseArea')">
+                                    <span v-html="displayAreaName" class="no_wrap">号码归属地</span>
+                                </a>
+                                <a href="javascript:void(0);" @@click="chooseFilter('isShowFilterSlide')">
+                                    <span>号码筛选</span>
+                                </a>
+                                <a href="javascript:void(0);" @@click="chooseFilter('isShowFilterPrice')">
+                                    <span>价格筛选</span>
+                                </a>
+                                <a href="javascript:void(0);" @@click="chooseFilter('isShowFilterRegex')">
+                                    <span>号码类型</span>
+                                </a>
+                            </nav>
+                        </transition>
+                    </div>
+                </section>
+                <section class="goods_list" v-show="isFetched">
+                    <template v-if="displayMobileList.length">
+                        <ul class="p_list clear_fix">
+                            <li class="p_item" v-for="item of displayMobileList" :key="item.Telphone" @@click="buy(item.TelphoneID)">
+                                <h3 class="mobile clear_fix" v-html="item.displayMobile" :style="{color:text_color}"></h3>
+
+
+
+
+
+
+
+
+                                <div class="price_wrap" v-if="show_price">
+                                    <p class="new_price">
+                                        <small>¥</small>{{ item.Price }}
+                                    </p>
+                                    <p class="f_right red profit " v-if="isNeedFetchProfit" style="display: none;">
+                                        <small>佣:¥</small>{{ item.direct }}
+
+                                    </p>
+
+                                    <p class="old_price show not-profit" v-else-if="item.Price<item.marketPrice">
+                                        <small>¥</small>{{ item.marketPrice }}
+                                    </p>
+                                </div>
+
+                                <h4 class="area no_wrap not-profit" v-if="!isNeedFetchProfit">{{item.area}}</h4>
+                            </li>
+                        </ul>
+                        <h4 v-show="isFetchingMore" class="is_fetching">
+                            <span>正在加载</span>
+                        </h4>
+                        <h4 class="no_more" v-show="!hasMore && displayMobileList.length>10">-没有更多数据了-</h4>
+                    </template>
+                    <div class="no_content" v-else>-该地区库存不足,建议修改筛选条件-</div>
+                </section>
+                <transition name="filter_slide">
+                    <aside class="filter_slide" v-show="isShowFilterSlide || isShowFilterRegex || isShowFilterPrice">
+                        <div class="slide_inner">
+                            <div class="slide_item" v-for="filterItem of currentSlidePack" :key="filterItem.key">
+                                <h3 class="title" v-if="filterItem.title">{{filterItem.title}}</h3>
+                                <ul class="clear_fix">
+                                    <li v-for="item of filterItem.list" :key="item.val"
+                                        :class="{active:checkFilterItemIsSelected(filterItem.key,item.val)}"
+                                        @@click="setFilterItem(filterItem.key,item.val)">
+                                        <span>{{item.title}}</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="btn_wrap flex">
+                            <button @@click="reset">重置</button>
+                            <button @@click="submit">确定</button>
+                        </div>
+                    </aside>
+                </transition>
+                <transition name="cover">
+                    <div class="cover no_touch_action" v-show="isShowCover" @@click="hideSlide"></div>
+                </transition>
+                <a href="express" class="order_link flex" :class="{fix:isShowFixNav}">
+                    <span>订单</span>
+                    <span>查询</span>
+                </a>
+            </div>
+            <section class="flash_sale hide">
+                <a href="/">
+                    <img src="/static/default/images/index/flashSale.png" alt="秒杀">
+                </a>
+            </section>
+
+
+        </div>
+    </article>
+
+
+    <p class="toggle-profit" style="position: fixed;right:.2rem;display: @ViewBag.Style;background-color: #999;height:.4rem;width:.4rem; bottom: 10px;filter:alpha(Opacity=80);-moz-opacity:0.5;opacity: 0.5;border-radius: 50%;color:#FFF;line-height: .4rem;padding:0 !important;text-align: center;font-size: .15rem;">显</p>
+
+
+    <div class="lastorder" style="display: none;" data-orderno="">
+        您选购的<strong class="lastOrderMobile"></strong>系统将为您锁定30分钟，<br>付款点我，点我，点我哦
+    </div>
+    <div style="display: none;">
+        <script type="text/javascript" src="https://s4.cnzz.com/z_stat.php?id=1278862551&web_id=1278862551"></script>
+    </div>
+
+
+
+
+
+
+
+    <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+
+    <script>
+
+
+        var curUrl = '';
+        var up = window.location.search.replace('?', '&');
+
+        console.log(up)
+        console.log(curUrl)
+        var routeName = 'index';
+        var channel = getQueryVariable('channel');
+        var operator = getQueryVariable('operator');
+
+        // 代理商ID
+        var broker = getQueryVariable('broker');
+
+        //用户token
+        var token = getQueryVariable('token');
+
+        if (!token) {
+            token = getQueryVariable('t');
+        }
+        //代理ID
+        function getCookie(name) {
+            var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+
+            if (arr = document.cookie.match(reg))
+
+                return unescape(arr[2]);
+            else
+                return 0;
+        }
+
+        var id = getQueryVariable('id');
+
+        if (id == 0) {
+            id = getCookie('id');
+
+        } else {
+            setCookie('id', id);
+        }
+
+        function setCookie(name, value) {
+            var Days = 1000;
+            var exp = new Date();
+            exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+            document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+        }
+        //是否需要获取城市  1/0
+        var autocity = 1;
+        //顶部banner
+        var bannerList = [];
+        //中间部分订购信息是否显示
+        var show_notice = 1;
+        //中间部分订购信息底色
+        var show_notice_background_color = "#b50005";
+        //中间部分订购信息文字颜色
+        var show_notice_color = "#fff";
+        //手机号码文字颜色
+        var text_color = "#595757";
+        //手机号码高亮色
+        var text_highlight_color = "#b50005";
+        //是否显示筛选器  1 / 0
+        var show_filter = "1";
+
+        //是否显示运营商
+        var show_isp = 1;
+        //是否显示价格  1 / 0
+        var show_price = 1;
+
+        var is_agent = 0;
+        var direct = 0;
+        var indirect = 0;
+
+        var openid = 0;
+
+
+        is_agent = @ViewBag.is_agent;
+        direct = 18;
+        indirect = 8;
+        openid = "@ViewBag.OpenId";
+
+
+        $('.toggle-profit').click(function () {
+
+            let obj = $('.toggle-profit');
+
+            console.log(obj.text());
+            if (obj.text() == '显') {
+                obj.text('隐');
+                $('.profit').show();
+
+            } else {
+                obj.text('显');
+                $('.profit').hide();
+            }
+
+        });
+
+
+
+        function getQueryVariable(variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i = 0; i < vars.length; i++) {
+                var pair = vars[i].split("=");
+                if (pair[0] === variable) {
+                    return pair[1];
+                }
+            }
+            return 0;
+        }
+
+
+    </script>
+
+
+
+
+
+    <script src="https://cdn.staticfile.org/vue/2.6.11/vue.min.js"></script>
+    <script src="https://cdn.staticfile.org/Swiper/5.3.8/js/swiper.min.js"></script>
+    <script src="/static/default/scripts/common/chinaRegion.js?v=2"></script>
+    <script src="/static/default/scripts/common/iosSelect.js?v=3"></script>
+
+    <script src="/static/default/scripts/common/base.js?v=01"></script>
+    <script src="/static/default/scripts/app/index.js?ver=012"></script>
+
+    <script>
+
+
+
+
+
+        $(document).ready(function () {
+
+            $.ajax({
+                url: 'getLastOrder',
+                type: 'post',
+                dataType: 'json',
+                success: function (res) {
+                    if (res.code != 200) {
+                        return false;
+                    }
+
+                    $('.lastorder').attr('data-orderno', res.data.orderNo);
+                    $('.lastOrderMobile').text(res.data.mobile);
+                    $('.lastorder').show();
+                }
+            });
+        });
+
+
+
+
+        $('.lastorder').click(function () {
+
+            let orderno = $('.lastorder').attr('data-orderno');
+            location.href = "prePayOrder?orderno=" + orderno
+
+        });
+
+        function getCookie(name) {
+            var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+
+            if (arr = document.cookie.match(reg))
+
+                return unescape(arr[2]);
+            else
+                return 0;
+        }
+
+
+        function setCookie(name, value) {
+            var Days = 1000;
+            var exp = new Date();
+            exp.setTime(exp.getTime() + Days * 24 * 60 * 60 * 1000);
+            document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString();
+        }
+
+
+
+    </script>
+
+
+</body>
+</html>

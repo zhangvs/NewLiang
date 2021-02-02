@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>下级利润概览-全国靓号</title>
+    <meta name="Keywords" content="全国靓号" />
+    <meta name="Description" content="全国靓号" />
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="shortcut icon" href="/static/agent/wap/images/favicon.ico">
+    <link rel="stylesheet" href="/static/agent/wap/styles/base.css?v=05">
+    <link rel="stylesheet" href="/static/agent/wap/styles/customer.css?v=098">
+    <link rel="stylesheet" href="~/static/agent/wap/scripts/common/laydate/theme/default/laydate.css" />
+</head>
+
+<body class="auto_width">
+    <article class="container main_customer_commission_summary">
+
+
+
+
+        <div class="main" id="app" v-cloak>
+            <section class="filter_wrap clear_fix">
+                <p class="select_wrap date_select" style="width: 100%;">
+                    <span class="pl_text" v-if="!date">请选择日期</span>
+                    <label for="selectDate" class="i_icon">
+                        <input type="text" id="selectDate" v-model="date" readonly>
+                    </label>
+                </p>
+            </section>
+            <section class="list_wrap" v-if="isFetched">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>代理名称</th>
+                            <th>代理联系方式</th>
+                            <th>佣金金额</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in list" :key="item.id">
+                            <td>{{ item.nickname }}</td>
+                            <td>{{ item.contact }}</td>
+                            <td>{{ item.profit }}</td>
+                        </tr>
+                        <tr v-if="list.length===0">
+                            <td colspan="3" style="height: 100px;">暂无记录</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+
+
+
+    </article>
+    <script>
+
+    </script>
+    <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.6.11/vue.min.js"></script>
+    <script src="/static/agent/wap/scripts/app/customerMixins.js?v=072"></script>
+    <script src="/static/agent/wap/scripts/common/base.js?v=062"></script>
+    <script src="/static/agent/wap/scripts/app/api.js?v=062"></script>
+
+
+
+
+
+    <script>
+
+
+        function req(uri, data = {}, method = '0', url = "/webapp/agentApi/") {
+
+            data._token = "Lt4gurSrgcO7MNPYv0k4AmQ4Pb8ObD2hvr4tqqCa";
+
+            let res = new Promise(function (resolve,reject){
+
+                $.ajax({
+                    url:url + uri,
+                    type:method == 0 ? 'post' : 'get',
+                    data:data,
+                    success:function (res)
+                    {
+                        resolve(res);
+                    },
+                    error:function (error)
+                    {
+                        reject(error);
+                    }
+                })
+            });
+
+            return res;
+        };
+
+        function cl(str)
+        {
+            console.log(str);
+        }
+
+
+    </script>
+    <script src="/static/agent/wap/scripts/common/laydate/laydate.js?v=010"></script>
+    <script src="/static/agent/wap/scripts/app/customer/commissionSummary.js?v=012"></script>
+
+</body>
+</html>

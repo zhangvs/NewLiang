@@ -1,0 +1,177 @@
+﻿<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+    <meta charset="utf-8">
+    <title>佣金明细</title>
+    <meta name="Keywords" content="全国靓号">
+    <meta name="Description" content="全国靓号">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <link rel="shortcut icon" href="/static/agent/wap/images/favicon.ico">
+    <link rel="stylesheet" href="/static/agent/wap/styles/base.css?v=05">
+    <link rel="stylesheet" href="/static/agent/wap/styles/customer.css?v=098">
+    <style id="__WXWORK_INNER_SCROLLBAR_CSS">
+        ::-webkit-scrollbar {
+            width: 12px !important;
+            height: 12px !important;
+        }
+
+        ::-webkit-scrollbar-track:vertical {
+        }
+
+        ::-webkit-scrollbar-thumb:vertical {
+            background-color: rgba(136, 141, 152, 0.5) !important;
+            border-radius: 10px !important;
+            background-clip: content-box !important;
+            border: 2px solid transparent !important;
+        }
+
+        ::-webkit-scrollbar-track:horizontal {
+        }
+
+        ::-webkit-scrollbar-thumb:horizontal {
+            background-color: rgba(136, 141, 152, 0.5) !important;
+            border-radius: 10px !important;
+            background-clip: content-box !important;
+            border: 2px solid transparent !important;
+        }
+
+        ::-webkit-resizer {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body class="auto_width">
+    <article class="container main_customer_commission">
+
+
+        <div class="main" id="app" v-cloak="">
+            <section class="filter_wrap clear_fix">
+                <p class="select_wrap date_select">
+                    <span class="pl_text" v-if="!date">请选择日期</span>
+                    <label for="selectDate" class="i_icon">
+                        <input type="text" id="selectDate" v-model="date" readonly="">
+                    </label>
+                </p>
+                <p class="select_wrap status_select">
+                    <label for="level" class="i_icon">{{ getStatusTitle(status) || '佣金状态' }}</label>
+                    <select id="level" v-model="status">
+                        <option value="">全部</option>
+                        <option :value="item.id" v-for="item in statusList">
+                            {{ item.title }}
+                        </option>
+                    </select>
+                </p>
+                <p class="select_wrap agent_select">
+                    <label for="level" class="i_icon">{{ agentName }}</label>
+                    <select v-model="child_id">
+                        <option value="">全部</option>
+                        <option :value="item.Id" v-for="item in agentList">
+                            {{ item.realname || item.nickname }}
+                        </option>
+                    </select>
+                </p>
+            </section>
+            <section class="sum_wrap">
+                <h3>统计信息</h3>
+                <div class="sum_content flex">
+                    <p v-for="item of stats">
+                        <span>{{ getStatusTitle(item.status) }}</span>
+                        <strong>{{ item.sum }}</strong>
+                    </p>
+                </div>
+            </section>
+            <section class="list_wrap" v-if="isFetched">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>号码</th>
+                            <th>类型</th>
+                            <th>代理商</th>
+                            <th>佣金（元）</th>
+                            <th>状态</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr v-for="item in commissionList">
+                            <td v-if="item.invited_agent_id ==0">{{ item.phonenum|mixMobile }}</td>
+                            <td v-if="item.invited_agent_id !=0">邀请加盟</td>
+                            <td v-if="item.invited_agent_id ==0">{{ item.indirect == 0 ? '直接(销售)' : '下级(销售)' }}</td>
+                            <td v-if="item.invited_agent_id !=0">{{ item.indirect == 0 ? '直接(加盟)' : '下级(加盟)' }}</td>
+                            <td>{{ item.agent_name }}</td>
+                            <td>{{ item.profit }}</td>
+                            <td><strong :class="'status_'+item.status">{{ item.statusTitle }}</strong></td>
+                        </tr>
+                        <tr v-if="commissionList.length===0">
+                            <td colspan="5" style="height: 100px;">暂无记录</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+            <section class="desc_wrap" v-if="isFetched">
+                <h3>说明：</h3>
+                <p>销售：佣金为销售号码奖励.</p>
+                <p>加盟：佣金为邀请加盟奖励.</p>
+                <p>未付款：用户尚未支付.</p>
+                <p>已入账：佣金已经进入您的账户.</p>
+                <p>已付款：用户已付款,等待开卡.</p>
+                <p>用户退款：佣金失效</p>
+            </section>
+        </div>
+
+
+    </article>
+    <script>
+
+    </script>
+    <script src="https://cdn.staticfile.org/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/vue/2.6.11/vue.min.js"></script>
+    <script src="/static/agent/wap/scripts/app/customerMixins.js?v=072"></script>
+    <script src="/static/agent/wap/scripts/common/base.js?v=062"></script>
+    <script src="/static/agent/wap/scripts/app/api.js?v=062"></script>
+
+
+
+
+
+    <script>
+
+
+        function req(uri, data = {}, method = '0', url = "/webapp/agentApi/") {
+
+            data._token = "F7ui5w7C4GtFJ2F4EN77UyKB2M3zwCTxuo4Uat27";
+
+            let res = new Promise(function (resolve, reject) {
+
+                $.ajax({
+                    url: url + uri,
+                    type: method == 0 ? 'post' : 'get',
+                    data: data,
+                    success: function (res) {
+                        resolve(res);
+                    },
+                    error: function (error) {
+                        reject(error);
+                    }
+                })
+            });
+
+            return res;
+        };
+
+        function cl(str) {
+            console.log(str);
+        }
+
+
+    </script>
+    <script src="/static/agent/wap/scripts/common/laydate/laydate.js?v=010"></script>
+    <script src="/static/agent/wap/scripts/app/customer/commission.js?v=0132"></script>
+
+
+
+</body>
+</html>
