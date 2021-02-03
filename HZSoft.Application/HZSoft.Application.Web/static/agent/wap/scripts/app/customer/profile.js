@@ -108,7 +108,7 @@ var app = new Vue({
         banner: function (val) {
             val = val || '';
             if (val.indexOf('http') === -1) {
-                return 'https://shop.jnlxsm.net' + val;
+                return 'https://www.1650539.com' + val;
             }
             return val;
         }

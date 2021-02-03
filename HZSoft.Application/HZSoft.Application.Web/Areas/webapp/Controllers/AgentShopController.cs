@@ -431,7 +431,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                                 model.TotalAmount = Amount.ToString();// 付款金额"0.01"ordersEntity.Price.ToString()
                                 model.OutTradeNo = sp_billno;// 外部订单号，商户网站订单系统中唯一的订单号
                                 model.ProductCode = "QUICK_WAP_WAY";
-                                model.QuitUrl = "https://shop.jnlxsm.net/webapp/agentshop/index";// 支付中途退出返回商户网站地址
+                                model.QuitUrl = "https://www.1650539.com/webapp/agentshop/index";// 支付中途退出返回商户网站地址
                                 model.TimeoutExpress = "90m";
                                 AlipayTradeWapPayRequest request = new AlipayTradeWapPayRequest();
                                 //设置支付完成同步回调地址
@@ -498,8 +498,8 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                                         trade_type = "NATIVE",
                                         trade_no = sp_billno,
                                         payid = ordersEntity.Id.ToString(),
-                                        wx_query_href = "https://shop.jnlxsm.net/webapp/agentshop/queryWx/" + ordersEntity.Id,
-                                        wx_query_over = "https://shop.jnlxsm.net/webapp/agentshop/paymentFinish/" + ordersEntity.Id
+                                        wx_query_href = "https://www.1650539.com/webapp/agentshop/queryWx/" + ordersEntity.Id,
+                                        wx_query_over = "https://www.1650539.com/webapp/agentshop/paymentFinish/" + ordersEntity.Id
                                     };
 
                                     root = new ReturnJson { code = 200, msg = "\u5fae\u4fe1\u626b\u7801\u63d0\u4ea4\u6210\u529f\uff01", data = h5PayData };
@@ -534,8 +534,8 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                                         trade_type = "H5",
                                         trade_no = sp_billno,
                                         payid = ordersEntity.Id.ToString(),
-                                        wx_query_href = "https://shop.jnlxsm.net/webapp/agentshop/queryWx/" + ordersEntity.Id,
-                                        wx_query_over = "https://shop.jnlxsm.net/webapp/agentshop/paymentFinish/" + ordersEntity.Id
+                                        wx_query_href = "https://www.1650539.com/webapp/agentshop/queryWx/" + ordersEntity.Id,
+                                        wx_query_over = "https://www.1650539.com/webapp/agentshop/paymentFinish/" + ordersEntity.Id
                                     };
 
                                     root = new ReturnJson { code = 200, msg = "\u5fae\u4fe1\u0048\u0035\u63d0\u4ea4\u6210\u529f\uff01", data = h5PayData };
