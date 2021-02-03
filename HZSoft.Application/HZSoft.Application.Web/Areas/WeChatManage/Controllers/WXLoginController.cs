@@ -42,7 +42,7 @@ namespace HZSoft.Application.Web.Areas.WeChatManage.Controllers
         /// <returns></returns>
         public ActionResult Redirect(string code, string state)
         {
-            //LogHelper.AddLog($"微信认证请求地址：{System.Web.HttpContext.Current.Request.Url.ToString()}  参数code： {code}，参数state： {state}");
+            LogHelper.AddLog($"微信认证请求地址：{System.Web.HttpContext.Current.Request.Url.ToString()}  参数code： {code}，参数state： {state}");
             //若用户禁止授权，则重定向后不会带上code参数
             if (string.IsNullOrEmpty(code))
             {
@@ -59,7 +59,7 @@ namespace HZSoft.Application.Web.Areas.WeChatManage.Controllers
                 else
                 {
                     string tokenUrl = string.Format(WeixinConfig.GetTokenUrl, code);
-                    //LogHelper.AddLog($"请求tokenUrl地址： {tokenUrl}");
+                    LogHelper.AddLog($"请求tokenUrl地址： {tokenUrl}");
                     token = AnalyzeHelper.Get<WeixinToken>(tokenUrl);
                     if (token.errcode != null)
                     {
@@ -67,25 +67,8 @@ namespace HZSoft.Application.Web.Areas.WeChatManage.Controllers
                     }
                     Session[WebSiteConfig.WXTOKEN_SESSION_NAME] = token;
                 }
-
-                //WeixinTokenBase tokenBase = new WeixinTokenBase();
-                //判断是否保存微信token基础，基础接口，2000次
-                //if (Session[WebSiteConfig.WXTOKEN_SESSION_NAME_BASE] != null)
-                //{
-                //    tokenBase = Session[WebSiteConfig.WXTOKEN_SESSION_NAME_BASE] as WeixinTokenBase;
-                //}
-                //else
-                //{
-                //    string tokenBaseUrl = string.Format(WeixinConfig.GetTokenBaseUrl, code);
-                //    tokenBase = AnalyzeHelper.Get<WeixinTokenBase>(tokenBaseUrl);
-                //    if (tokenBase.errcode != null)
-                //    {
-                //        return Content(tokenBase.errcode + ":" + tokenBase.errmsg);
-                //    }
-                //    Session[WebSiteConfig.WXTOKEN_SESSION_NAME_BASE] = tokenBase;
-                //}
-
-
+                Session["OpenId"] = token.openid;//进行登录
+                LogHelper.AddLog($"token.openid： {Session["OpenId"]}");
                 //查询用户是否存在
                 var userEntity = wechatUserBll.GetEntity(token.openid);
                 if (userEntity == null)

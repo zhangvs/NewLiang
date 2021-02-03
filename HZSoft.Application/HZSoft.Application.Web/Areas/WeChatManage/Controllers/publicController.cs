@@ -19,13 +19,13 @@ namespace HZSoft.Application.Web.Areas.WeChatManage.Controllers
         {
             H5Response root = new H5Response { code = true, status = true, msg = "成功!", data = new BaseWxModel2() };
 
-            root.data.appId = WeixinConfig.AppID2;
+            root.data.appId = WeixinConfig.AppID;
             root.data.timestamp = JSSDKHelper.GetTimestamp();
             root.data.nonceStr = JSSDKHelper.GetNoncestr();
 
             root.data.url = Request.Url.ToString();//MyCommFun.getTotalUrl();
 
-            string ticket = JsApiTicketContainer.TryGetJsApiTicket(WeixinConfig.AppID2, WeixinConfig.AppSecret2);
+            string ticket = JsApiTicketContainer.TryGetJsApiTicket(WeixinConfig.AppID, WeixinConfig.AppSecret);
 
             JSSDKHelper jsHelper = new JSSDKHelper();
             //最后一个参数url，必须为当前的网址

@@ -22,7 +22,7 @@ namespace HZSoft.Application.Web.Areas.H5.Controllers
         private TelphoneLiangBLL tlbll = new TelphoneLiangBLL();
         private OrdersBLL ordersbll = new OrdersBLL();
 
-        private static TenPayV3Info tenPayV3Info = new TenPayV3Info(WeixinConfig.AppID2, WeixinConfig.AppSecret2, WeixinConfig.MchId
+        private static TenPayV3Info tenPayV3Info = new TenPayV3Info(WeixinConfig.AppID, WeixinConfig.AppSecret, WeixinConfig.MchId
             , WeixinConfig.Key, WeixinConfig.TenPayV3Notify);
 
 
@@ -148,7 +148,7 @@ namespace HZSoft.Application.Web.Areas.H5.Controllers
                 string productId = ordersEntity.TelphoneID.ToString();
 
                 //创建请求统一订单接口参数
-                var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WeixinConfig.AppID2,
+                var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WeixinConfig.AppID,
                 tenPayV3Info.MchId,
                 "支付靓号",
                 sp_billno,
@@ -170,7 +170,7 @@ namespace HZSoft.Application.Web.Areas.H5.Controllers
                 {
                     H5PayData h5PayData = new H5PayData()
                     {
-                        appid = WeixinConfig.AppID2,
+                        appid = WeixinConfig.AppID,
                         code_url = result.code_url,//weixin://wxpay/bizpayurl?pr=lixpXgt
                         mch_id = WeixinConfig.MchId,
                         nonce_str = result.nonce_str,

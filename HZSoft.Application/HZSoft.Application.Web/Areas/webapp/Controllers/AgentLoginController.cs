@@ -38,7 +38,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
         /// 2.没登录的新用户进入登录界面，使用账号密码登录，登录后会修改微信用户的userid，username字段，下次可直接进入主界面
         /// </summary>
         /// <returns></returns>
-        [HandlerWX2AuthorizeAttribute(LoginMode.Enforce)]
+        [HandlerWXAuthorizeAttribute(LoginMode.Enforce)]
         public ActionResult Index(int? id)
         {
             //1.2根据注册的微信id去用户表中匹配是否有此员工

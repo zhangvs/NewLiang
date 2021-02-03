@@ -32,7 +32,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
         private ComissionLogBLL comissionLogBll = new ComissionLogBLL();
         private Client_TelFeeBLL telFeeBll = new Client_TelFeeBLL();
         private OrdersBLL ordersbll = new OrdersBLL();
-        private static TenPayV3Info tenPayV3Info = new TenPayV3Info(WeixinConfig.AppID2, WeixinConfig.AppSecret2, WeixinConfig.MchId
+        private static TenPayV3Info tenPayV3Info = new TenPayV3Info(WeixinConfig.AppID, WeixinConfig.AppSecret, WeixinConfig.MchId
             , WeixinConfig.Key, WeixinConfig.TenPayV3Notify);
 
 
@@ -84,7 +84,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                     //判断是否微信通过认证
                     if (CurrentWxUser.Users == null)
                     {
-                        string url = string.Format(WeixinConfig.GetCodeUrl2, HttpUtility.UrlEncode(RequestUri));
+                        string url = string.Format(WeixinConfig.GetCodeUrl, HttpUtility.UrlEncode(RequestUri));
                         return Redirect(url);
                     }
 
@@ -467,7 +467,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                             if (ordersEntity.PayType == "微信扫码")
                             {
                                 //创建请求统一订单接口参数
-                                var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WeixinConfig.AppID2,
+                                var xmlDataInfo = new TenPayV3UnifiedorderRequestData(WeixinConfig.AppID,
                                 tenPayV3Info.MchId,
                                 "扫码支付靓号",
                                 sp_billno,
@@ -486,7 +486,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                                 {
                                     H5PayData h5PayData = new H5PayData()
                                     {
-                                        appid = WeixinConfig.AppID2,
+                                        appid = WeixinConfig.AppID,
                                         code_url = result.code_url,//weixin://wxpay/bizpayurl?pr=lixpXgt-----------扫码支付
                                         mch_id = WeixinConfig.MchId,
                                         nonce_str = result.nonce_str,
@@ -511,7 +511,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                             }
                             else
                             {
-                                var xmlDataInfoH5 = new TenPayV3UnifiedorderRequestData(WeixinConfig.AppID2, tenPayV3Info.MchId, "H5购买靓号", sp_billno,
+                                var xmlDataInfoH5 = new TenPayV3UnifiedorderRequestData(WeixinConfig.AppID, tenPayV3Info.MchId, "H5购买靓号", sp_billno,
                                 // 1,
                                 Convert.ToInt32(Amount * 100),
                                 Request.UserHostAddress, tenPayV3Info.TenPayV3Notify, TenPayV3Type.MWEB/*此处无论传什么，方法内部都会强制变为MWEB*/, null, tenPayV3Info.Key, nonceStr);
@@ -522,7 +522,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                                 {
                                     H5PayData h5PayData = new H5PayData()
                                     {
-                                        appid = WeixinConfig.AppID2,
+                                        appid = WeixinConfig.AppID,
                                         mweb_url = resultH5.mweb_url,//H5访问链接
                                         mch_id = WeixinConfig.MchId,
                                         nonce_str = resultH5.nonce_str,
@@ -564,7 +564,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
             }
         }
 
-        [HandlerWX2AuthorizeAttribute(LoginMode.Enforce)]
+        [HandlerWXAuthorizeAttribute(LoginMode.Enforce)]
         public ActionResult pay(string orderno)
         {
             var ordersEntity = ordersbll.GetEntityByOrderSn(orderno);
@@ -574,7 +574,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                 var timeStamp = TenPayV3Util.GetTimestamp();
 
                 //商品Id，用户自行定义
-                var xmlDataInfoH5 = new TenPayV3UnifiedorderRequestData(WeixinConfig.AppID2, tenPayV3Info.MchId, ordersEntity.Tel, ordersEntity.OrderSn,
+                var xmlDataInfoH5 = new TenPayV3UnifiedorderRequestData(WeixinConfig.AppID, tenPayV3Info.MchId, ordersEntity.Tel, ordersEntity.OrderSn,
     Convert.ToInt32(Convert.ToDecimal(ordersEntity.Price) * 100),//1
     Request.UserHostAddress, WeixinConfig.TenPayV3Notify, TenPayV3Type.JSAPI, CurrentWxUser.OpenId, tenPayV3Info.Key, nonceStr);
                 var result = TenPayV3.Unifiedorder(xmlDataInfoH5);//调用统一订单接口
@@ -584,11 +584,11 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                 {
                     WFTWxModel jsApiPayData = new WFTWxModel()
                     {
-                        appId = WeixinConfig.AppID2,
+                        appId = WeixinConfig.AppID,
                         timeStamp = timeStamp,
                         nonceStr = nonceStr,
                         package = package,
-                        paySign = TenPayV3.GetJsPaySign(WeixinConfig.AppID2, timeStamp, nonceStr, package, WeixinConfig.Key)
+                        paySign = TenPayV3.GetJsPaySign(WeixinConfig.AppID, timeStamp, nonceStr, package, WeixinConfig.Key)
                     };
                     ViewBag.id = ordersEntity.Id;
                     ViewBag.WxModel = jsApiPayData;

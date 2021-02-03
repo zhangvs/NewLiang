@@ -132,7 +132,6 @@ namespace HZSoft.Application.Web.Areas.WeChatManage.Controllers
         public ActionResult Index(string organizeId, string city)
         {
             //添加靓号浏览实体
-            //organizeId = "2287f3ae-e6b6-4a91-9b0c-66fc87658eaf";
             if (!string.IsNullOrEmpty(organizeId))
             {
                 var organize = organizebll.GetEntity(organizeId);
@@ -259,7 +258,6 @@ namespace HZSoft.Application.Web.Areas.WeChatManage.Controllers
         public ActionResult Index2(string organizeId, string city)
         {
             //添加靓号浏览实体
-            //organizeId = "2287f3ae-e6b6-4a91-9b0c-66fc87658eaf";
             if (!string.IsNullOrEmpty(organizeId))
             {
                 var organize = organizebll.GetEntity(organizeId);
@@ -342,7 +340,6 @@ namespace HZSoft.Application.Web.Areas.WeChatManage.Controllers
         public ActionResult Main(string organizeId, string city)
         {
             //添加靓号浏览实体
-            //organizeId = "2287f3ae-e6b6-4a91-9b0c-66fc87658eaf";
             if (!string.IsNullOrEmpty(organizeId))
             {
                 var organize = organizebll.GetEntity(organizeId);

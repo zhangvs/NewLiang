@@ -20,7 +20,7 @@ using System.Web.Mvc;
 
 namespace HZSoft.Application.Web.Areas.webapp.Controllers
 {
-    [HandlerWX2AuthorizeAttribute(LoginMode.Enforce)]
+    [HandlerWXAuthorizeAttribute(LoginMode.Enforce)]
     public class AgentApiController : Controller
     {
         private Wechat_AgentBLL agentBll = new Wechat_AgentBLL();

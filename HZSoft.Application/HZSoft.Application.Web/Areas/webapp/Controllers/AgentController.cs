@@ -21,7 +21,7 @@ using System.Web.Mvc;
 
 namespace HZSoft.Application.Web.Areas.webapp.Controllers
 {
-    [HandlerWX2AuthorizeAttribute(LoginMode.Enforce)]
+    [HandlerWXAuthorizeAttribute(LoginMode.Enforce)]
     public class AgentController : Controller
     {
         private Wechat_AgentBLL agentBll = new Wechat_AgentBLL();
@@ -31,7 +31,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
         private UserBLL UserBLL = new UserBLL();
         
 
-        private static TenPayV3Info tenPayV3Info = new TenPayV3Info(WeixinConfig.AppID2, WeixinConfig.AppSecret2, WeixinConfig.MchId
+        private static TenPayV3Info tenPayV3Info = new TenPayV3Info(WeixinConfig.AppID, WeixinConfig.AppSecret, WeixinConfig.MchId
             , WeixinConfig.Key, WeixinConfig.TenPayV3Notify);
 
 
@@ -75,22 +75,6 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                     LV = "普通代理"
                 };
                 agentBll.SaveForm(null, agentEntity);
-
-                //如果父级和顶级为null，坚决赋值，更新null为当前id，或者当前机构就是顶级员工
-                //agentEntity = agentBll.GetEntityByOpenId(CurrentWxUser.OpenId);
-                //if (agentEntity != null)
-                //{
-                //    if (string.IsNullOrEmpty(agentEntity.Pid.ToString()))
-                //    {
-                //        agentEntity.Pid = agentEntity.Id;
-                //        agentEntity.Tid = agentEntity.Id;
-                //    }
-                //    else if (string.IsNullOrEmpty(agentEntity.Tid.ToString()))
-                //    {
-                //        agentEntity.Tid = agentEntity.Pid;
-                //    }
-                //}
-                //agentBll.SaveForm(agentEntity.Id, agentEntity);
             }
 
             ViewBag.V1Count = 0;
@@ -238,7 +222,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                 var timeStamp = TenPayV3Util.GetTimestamp();
 
                 //商品Id，用户自行定义
-                var xmlDataInfoH5 = new TenPayV3UnifiedorderRequestData(WeixinConfig.AppID2, tenPayV3Info.MchId, LV, sp_billno,
+                var xmlDataInfoH5 = new TenPayV3UnifiedorderRequestData(WeixinConfig.AppID, tenPayV3Info.MchId, LV, sp_billno,
     Convert.ToInt32(Convert.ToDecimal(price) * 100), //1
     Request.UserHostAddress, WeixinConfig.TenPayV3Notify, TenPayV3Type.JSAPI, CurrentWxUser.OpenId, tenPayV3Info.Key, nonceStr);
                 var result = TenPayV3.Unifiedorder(xmlDataInfoH5);//调用统一订单接口
@@ -248,11 +232,11 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                 {
                     WFTWxModel jsApiPayData = new WFTWxModel()
                     {
-                        appId = WeixinConfig.AppID2,
+                        appId = WeixinConfig.AppID,
                         timeStamp = timeStamp,
                         nonceStr = nonceStr,
                         package = package,
-                        paySign = TenPayV3.GetJsPaySign(WeixinConfig.AppID2, timeStamp, nonceStr, package, WeixinConfig.Key)
+                        paySign = TenPayV3.GetJsPaySign(WeixinConfig.AppID, timeStamp, nonceStr, package, WeixinConfig.Key)
                     };
                     ViewBag.WxModel = jsApiPayData;
                     LogHelper.AddLog(JsonConvert.SerializeObject(jsApiPayData));//记录日志
