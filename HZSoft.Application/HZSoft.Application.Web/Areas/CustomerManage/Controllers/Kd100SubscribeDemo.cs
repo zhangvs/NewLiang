@@ -9,7 +9,7 @@ namespace HZSoft.Application.Web.Areas.CustomerManage.Controllers
     {
         //电商加密私钥，快递鸟提供，注意保管，不要泄漏
         private string Key = "tEstynxGxGuN4344";
-        private string CallBackUrl = "http://hmk.lywenkai.com/CustomerManage/KD100API/SavePushRecord";
+        private string CallBackUrl = "http://www.1650539.com/CustomerManage/KD100API/SavePushRecord";
         //测试请求url
         //private string ReqURL = "https://poll.kuaidi100.com/test/poll";
         //正式请求url

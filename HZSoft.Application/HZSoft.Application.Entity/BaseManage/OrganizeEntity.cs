@@ -305,7 +305,7 @@ namespace HZSoft.Application.Entity.BaseManage
         #endregion
     }
 }
-//[{"url_short":"http://t.cn/EZ9UsTu","url_long":"http://hmk.lywenkai.com/WeChatManage/Liang/Main?organizeId=076b0487-fda4-41a3-a8dc-adc1cefd56ec","type":0}]
+//[{"url_short":"http://t.cn/EZ9UsTu","url_long":"http://www.1650539.com/WeChatManage/Liang/Main?organizeId=076b0487-fda4-41a3-a8dc-adc1cefd56ec","type":0}]
 public class sina_short_url
 {
     public string url_short { get; set; }
