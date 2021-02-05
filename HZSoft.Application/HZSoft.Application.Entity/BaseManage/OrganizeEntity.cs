@@ -211,6 +211,19 @@ namespace HZSoft.Application.Entity.BaseManage
         /// 最后加盟时间
         /// </summary>
         public DateTime? LastJoinDate { get; set; }
+        /// <summary>
+        /// 二级返佣比例
+        /// </summary>		
+        public decimal? YongRatio2 { get; set; }
+        /// <summary>
+        /// 三级返佣比例
+        /// </summary>		
+        public decimal? YongRatio3 { get; set; }
+        /// <summary>
+        /// 代理主键
+        /// </summary>
+        /// <returns></returns>
+        public int? AgentId { get; set; }
         #endregion
 
         #region 扩展操作
@@ -228,16 +241,6 @@ namespace HZSoft.Application.Entity.BaseManage
             SeeCount = 0;
             ShareCount = 0;
             JoinCount = 0;
-            if (ParentId == "wk207fa1a9-160c-4943-a89b-8fa4db0547ce" || ParentId == "b4a7e43a-0f58-4635-bb39-0185a0a130a7" || ParentId == "7e89a99c-8eae-44f6-873a-a434229f74bf")//文楷靓号0级
-            {
-                //this.Description = GetShortUrl(Config.GetValue("Domain") + "/WeChatManage/Liang/Main?organizeId=" + OrganizeId);
-                this.Description = Config.GetValue("Domain") + "/WeChatManage/Liang/Main?organizeId=" + OrganizeId;
-            }
-            else
-            {
-                //this.Description = GetShortUrl(Config.GetValue("Domain") + "/WeChatManage/Liang/Index?organizeId=" + OrganizeId);
-                this.Description = Config.GetValue("Domain") + "/WeChatManage/Liang/Index?organizeId=" + OrganizeId;
-            }
         }
 
         /// <summary>

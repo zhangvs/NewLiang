@@ -2,6 +2,7 @@
 using HZSoft.Application.Entity.AuthorizeManage;
 using HZSoft.Application.Entity.BaseManage;
 using HZSoft.Application.Entity.CustomerManage;
+using HZSoft.Application.Entity.WeChatManage;
 using HZSoft.Application.IService.BaseManage;
 using HZSoft.Data.Repository;
 using HZSoft.Util;
@@ -282,7 +283,8 @@ SELECT OrganizeId,Img1,Img2,Img3,Img4 FROM T where DeleteMark <> 1 and ParentId=
                 //父机构
                 if(organizeEntity.ParentId == null)
                 {
-                    throw new Exception("上级机构不能为空！");
+                    organizeEntity.ParentId = "0";
+                    //throw new Exception("上级机构不能为空！");
                 }
 
                 if (organizeEntity.ParentId != "0")
@@ -302,18 +304,9 @@ SELECT OrganizeId,Img1,Img2,Img3,Img4 FROM T where DeleteMark <> 1 and ParentId=
                 {
                     organizeEntity.Category = 0;
                 }
-                //如果图片为空
-                if (string.IsNullOrEmpty(organizeEntity.Img1))
-                {
-                    organizeEntity.Img1 = Config.GetValue("Img1");
-                    organizeEntity.Img2 = Config.GetValue("Img2");  
-                    organizeEntity.Img3 = Config.GetValue("Img3");
-                    organizeEntity.Img4 = Config.GetValue("Img4");
-                }
-
                 organizeEntity.Create();
 
-                db.Insert(organizeEntity); 
+                //db.Insert(organizeEntity); 
                 #endregion
 
                 #region 新增默认管理部门
@@ -337,39 +330,7 @@ SELECT OrganizeId,Img1,Img2,Img3,Img4 FROM T where DeleteMark <> 1 and ParentId=
                 #endregion
 
                 #region 授权功能 
-                //string copyObject = "f7e8ce33-ce79-460f-a24c-d0ed53001477";//复制二级唐山和讯老李17040258888管理
-                ////临沂大华单独处理
-                //if (organizeEntity.TopOrganizeId== "a5a962da-57e1-4ad4-87b2-bbdcd1b7cc92" && organizeEntity.Category != 0)
-                //{
-                //    copyObject = "1062959a-bd81-4547-ac9a-c51f750ea237";//珊哥在线管理（只显示机构，其它什么都没有）
-                //}
-                //else
-                //{
-                //    if (organizeEntity.Category < 1)
-                //    {
-                //        copyObject = "209b63c7-3638-45e7-b24a-cf88f6d5c9dd";//复制唐山和讯老李17040258888管理（零，一级）
-                //    }
-                //}
-                string copyObject = "c1139630-d98f-4412-be8e-2c13cfd11380";//默认三级：不显示靓号库，看不到底价
-                //临沂大华单独处理
-                if (organizeEntity.TopOrganizeId == "a5a962da-57e1-4ad4-87b2-bbdcd1b7cc92" && organizeEntity.Category != 0)
-                {
-                    copyObject = "fbf669b2-e7fc-450d-a3e5-20e005cab567";//测试4级机构 	18777777777（只显示机构，其它什么都没有）
-                }
-                else
-                {
-                    if (organizeEntity.Category <= 1)
-                    {
-                        copyObject = "094115aa-4635-4ad0-b798-76d34c6d4e72";//零级：含基础设置 18660999999
-                    }
-                    else if (organizeEntity.Category == 2)
-                    {
-                        copyObject = "12de4dd4-156b-4495-8f43-e235d6de85d2";//二级：可看低价，无基础设置18666666666
-                    }
-                }
-
-
-                var AuthorizeList = db.FindList<AuthorizeEntity>(t => t.ObjectId == copyObject);
+                var AuthorizeList = db.FindList<AuthorizeEntity>(t => t.ObjectId == "6581e298-d4b4-4347-96da-030d82cd247b");
                 foreach (AuthorizeEntity item in AuthorizeList)
                 {
                     AuthorizeEntity authorizeEntity = new AuthorizeEntity();
@@ -415,9 +376,47 @@ SELECT OrganizeId,Img1,Img2,Img3,Img4 FROM T where DeleteMark <> 1 and ParentId=
                 userRelationEntity.Category = 2;//登录名为机构名拼音首字母
                 userRelationEntity.UserId = userEntity.UserId;
                 userRelationEntity.ObjectId = userEntity.RoleId;
-                db.Insert(userRelationEntity); 
+                db.Insert(userRelationEntity);
                 #endregion
 
+                #region 新增代理表
+                var agentEntity = db.FindEntity<Wechat_AgentEntity>(t => t.OpenId == organizeEntity.ManagerId);
+                if (agentEntity == null)
+                {
+                    var weChat_Users = db.FindEntity<WeChat_UsersEntity>(t => t.OpenId == organizeEntity.ManagerId);
+                    if (weChat_Users != null)
+                    {
+                        agentEntity = new Wechat_AgentEntity()
+                        {
+                            OpenId = weChat_Users.OpenId,
+                            nickname = weChat_Users.NickName,
+                            Sex = weChat_Users.Sex,
+                            HeadimgUrl = weChat_Users.HeadimgUrl,
+                            Province = weChat_Users.Province,
+                            City = weChat_Users.City,
+                            Country = weChat_Users.Country,
+                            LV = "普通代理",
+                            Category = 0,
+                            OrganizeId = organizeEntity.OrganizeId,//绑定机构id
+                        };
+                        agentEntity.Create();
+                        agentEntity.Tid = agentEntity.Id;
+                        agentEntity.Pid = agentEntity.Id;
+                        db.Insert(agentEntity);
+                    }
+                }
+                else
+                {
+                    if (string.IsNullOrEmpty(agentEntity.OrganizeId))
+                    {
+                        agentEntity.OrganizeId = organizeEntity.OrganizeId;//如果不存在代理机构id，
+                        db.Update(agentEntity);
+                    }
+                }
+                organizeEntity.AgentId = agentEntity.Id;//绑定代理id
+                #endregion
+
+                db.Insert(organizeEntity);
                 db.Commit();
             }
             catch (Exception)

@@ -272,16 +272,24 @@
                         </td>
                     </tr>
                     <tr>
+                        <th class="formTitle">二级返佣<font face="宋体">*</font></th>
+                        <td class="formValue">
+                            <input id="YongRatio2" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" />
+                        </td>
+                        <th class="formTitle">三级返佣<font face="宋体">*</font></th>
+                        <td class="formValue">
+                            <input id="YongRatio3" type="text" class="form-control" isvalid="yes" checkexpession="NotNull" />
+                        </td>
+                    </tr>
+                    @*<tr>
                         <th class="formTitle">
                             其它代售公司
                         </th>
                         <td class="formValue" colspan="3">
                             <input id="OtherOrganizeId" type="text" class="form-control" />
                             <input id="ParentId" type="hidden" class="form-control" />
-                            @*<div id="ParentId" type="selectTree" class="ui-select" style="display:none">
-                    </div>*@
                         </td>
-                    </tr>
+                    </tr>*@
                     <tr>
                         <th class="formTitle">公司地点</th>
                         <td class="formValue" colspan="3">
@@ -300,7 +308,7 @@
                             推广链接
                         </th>
                         <td class="formValue" colspan="3">
-                            <textarea id="Description" class="form-control" readonly style="height: 70px;"></textarea>
+                            <textarea id="Description" class="form-control" readonly style="height: 40px;"></textarea>
                         </td>
                     </tr>
                 </table>
@@ -313,7 +321,6 @@
                     如下拉列表之中没有出现相关的微信昵称，请先用该微信点击任意一个手机靓号商城页面，就可以出现在下拉列表之中。
                 </p>
                 <p><b>2. 微信ID :</b> 不需要手动输入，选择完对应的微信昵称之后，会自动显示出来。</p>
-                <p><b>3. 其它代售公司 :</b> 购买Vip服务之后，输入平台其它机构的机构编号，选择该公司的部分靓号代售，便可在手机端靓号平台之中显示。</p>
             </div>
             <div id="ExpandInfo" class="tab-pane ">
                 <table class="form">

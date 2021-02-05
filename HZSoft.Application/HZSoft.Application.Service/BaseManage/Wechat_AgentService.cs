@@ -190,9 +190,6 @@ namespace HZSoft.Application.Service.BaseManage
             }
             else
             {
-                entity.Create();
-                this.BaseRepository().Insert(entity);
-
                 //创建普通代理，由上级连接打开的，上级普通代理数量+1
                 if (!string.IsNullOrEmpty(entity.Pid.ToString()))
                 {
@@ -200,8 +197,17 @@ namespace HZSoft.Application.Service.BaseManage
                     if (pidEntity!=null)
                     {
                         this.BaseRepository().Update(pidEntity);
+                        entity.Category = pidEntity.Category + 1;//代理级别为上级的级别+1
+                        entity.OrganizeId = pidEntity.OrganizeId;//设置机构id为上级机构id
+                    }
+                    else
+                    {
+                        entity.Category = 0;//代理级别，顶级为0级
                     }
                 }
+
+                entity.Create();
+                this.BaseRepository().Insert(entity);
             }
         }
         #endregion

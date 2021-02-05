@@ -135,14 +135,14 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                 {
                     if (agentEntity.Pid!= agentEntity.Id && agentEntity.Pid != agentEntity.Id)
                     {
-                        agentEntity.Pid = agentEntity.Id;
-                        agentEntity.Tid = agentEntity.Id;
+                        agentEntity.Pid = agentEntity.Id;//设置上级id为访问id
+                        agentEntity.Tid = agentEntity.Id;//获取上级中的顶级id
                         agentBll.SaveForm(agentEntity.Id, agentEntity);
 
                         user.WeOpenId = CurrentWxUser.OpenId;
                         user.WeChat = CurrentWxUser.NickName;
                         user.TopAgentMark = 1;//顶级
-                        UserBLL.SaveForm(null, user);
+                        UserBLL.SaveForm(user.UserId, user);
                     }
                     else
                     {
@@ -160,8 +160,6 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                         Province = CurrentWxUser.Users.Province,
                         City = CurrentWxUser.Users.City,//微信城市
                         Country = CurrentWxUser.Users.Country,
-                        Pid = agentEntity.Id,//设置上级id为访问id
-                        Tid = agentEntity.Id,//获取上级中的顶级id
                         LV = "普通代理"
                     };
                     agentBll.SaveForm(null, agentEntity);
@@ -169,7 +167,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                     user.WeOpenId = CurrentWxUser.OpenId;
                     user.WeChat = CurrentWxUser.NickName;
                     user.TopAgentMark = 1;//顶级
-                    UserBLL.SaveForm(null, user);
+                    UserBLL.SaveForm(user.UserId, user);
                 }
             }
 

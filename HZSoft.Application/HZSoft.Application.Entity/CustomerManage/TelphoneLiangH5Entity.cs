@@ -129,6 +129,11 @@ namespace HZSoft.Application.Entity.CustomerManage
         /// <returns></returns>
         public string OrganizeId { get; set; }
         /// <summary>
+        /// 共享标志
+        /// </summary>
+        /// <returns></returns>
+        public int? ShareMark { get; set; }
+        /// <summary>
         /// 备注
         /// </summary>
         /// <returns></returns>

@@ -272,6 +272,22 @@ namespace HZSoft.Application.Service.CustomerManage
         {
             var queryParam = queryJson.ToJObject();
             string strSql = "select * from TelphoneLiangH5 where DeleteMark <> 1 and EnabledMark <> 1";
+            //机构后台
+            if (!queryParam["OrganizeId"].IsEmpty())
+            {
+                string OrganizeId = queryParam["OrganizeId"].ToString();
+                strSql += " and OrganizeId = '" + OrganizeId + "'";
+            }
+            else
+            {
+                if (!OperatorProvider.Provider.Current().IsSystem && OperatorProvider.Provider.Current().UserId != "3303254b-7cd3-4a25-abd3-bb2542a08df9")//龙哥可以查看到所有号码
+                {
+                    string companyId = OperatorProvider.Provider.Current().CompanyId;
+                    //一级机构可以查看上级0级的号码库，因为自己人员工
+                    strSql += " and OrganizeId IN( select OrganizeId from Base_Organize where OrganizeId='" + companyId
+                        + "' or OrganizeId =(SELECT ParentId FROM Base_Organize WHERE OrganizeId='" + companyId + "'))";
+                }
+            }
             strSql += GetSql(queryJson);
             return this.BaseRepository().FindList(strSql.ToString(), pagination);
         }
@@ -745,13 +761,21 @@ namespace HZSoft.Application.Service.CustomerManage
                         {
                             existMark = 0;
                         }
+                        //共享自营
+                        string shareStr = dtSource.Rows[i][7].ToString();
+                        
+                        int shareMark = 1;
+                        if (existStr == "自营")
+                        {
+                            existMark = 0;
+                        }
 
                         //防止不含推广价此列 报错提示：无法找到列 7
                         decimal? MaxPrice = null;
-                        if (columns == 8)
+                        if (columns == 9)
                         {
                             //推广价
-                            string maxPriceStr = dtSource.Rows[i][7].ToString();
+                            string maxPriceStr = dtSource.Rows[i][8].ToString();
                             //如果当前列的单元格报错，也会转类型错误
                             if (!string.IsNullOrEmpty(maxPriceStr))
                             {
@@ -778,7 +802,7 @@ namespace HZSoft.Application.Service.CustomerManage
                             ExistMark = existMark,
                             SellMark = 0,
                             DeleteMark = 0,
-                            OrganizeId = OperatorProvider.Provider.Current().CompanyId,
+                            ShareMark=shareMark
                         };
                         entity.Create();
                         db.Insert(entity);

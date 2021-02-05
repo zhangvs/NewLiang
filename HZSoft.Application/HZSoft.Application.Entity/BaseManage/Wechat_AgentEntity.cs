@@ -19,6 +19,16 @@ namespace HZSoft.Application.Entity.BaseManage
         /// <returns></returns>
         public int? Id { get; set; }
         /// <summary>
+        /// 价格浮动比例上下10%
+        /// </summary>
+        /// <returns></returns>
+        public decimal? FuDong { get; set; }
+        /// <summary>
+        /// 等级
+        /// </summary>
+        /// <returns></returns>
+        public int? Category { get; set; }
+        /// <summary>
         /// 上级
         /// </summary>
         /// <returns></returns>
@@ -143,6 +153,11 @@ namespace HZSoft.Application.Entity.BaseManage
         /// </summary>
         /// <returns></returns>
         public decimal? childprofit { get; set; }
+        /// <summary>
+        /// 机构id
+        /// </summary>
+        /// <returns></returns>
+        public string OrganizeId { get; set; }
         #endregion
 
         #region 扩展操作
