@@ -1,3 +1,4 @@
+using HZSoft.Application.Code;
 using HZSoft.Application.Entity.BaseManage;
 using HZSoft.Application.IService.BaseManage;
 using HZSoft.Data.Repository;
@@ -73,6 +74,11 @@ namespace HZSoft.Application.Service.BaseManage
             {
                 string LV = queryParam["LV"].ToString();
                 strSql += " and LV  = '" + LV+"'";
+            }
+            if (!OperatorProvider.Provider.Current().IsSystem && OperatorProvider.Provider.Current().UserId != "3303254b-7cd3-4a25-abd3-bb2542a08df9")//龙哥可以查看到所有号码
+            {
+                string OrganizeId = OperatorProvider.Provider.Current().CompanyId;
+                strSql += " and OrganizeId  = '" + OrganizeId + "'";
             }
             return this.BaseRepository().FindList(strSql.ToString(), pagination);
         }

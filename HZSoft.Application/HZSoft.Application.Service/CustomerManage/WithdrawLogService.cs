@@ -52,13 +52,19 @@ namespace HZSoft.Application.Service.CustomerManage
                 string agent_id = queryParam["agent_id"].ToString();
                 strSql += " and agent_id = " + agent_id;
             }
-            
+            if (!OperatorProvider.Provider.Current().IsSystem && OperatorProvider.Provider.Current().UserId != "3303254b-7cd3-4a25-abd3-bb2542a08df9")//龙哥可以查看到所有号码
+            {
+                string companyId = OperatorProvider.Provider.Current().CompanyId;
+                strSql += " and agent_id  in (SELECT id FROM Wechat_Agent WHERE OrganizeId='" + companyId + "')";
+            }
+
             //状态
             if (!queryParam["status"].IsEmpty())
             {
                 string status = queryParam["status"].ToString();
                 strSql += " and status = " + status;
             }
+
             return this.BaseRepository().FindList(strSql.ToString(), pagination);
         }
         /// <summary>

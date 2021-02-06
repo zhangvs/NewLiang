@@ -23,6 +23,7 @@ namespace HZSoft.Application.Service.BaseManage
     /// </summary>
     public class OrganizeService : RepositoryFactory<OrganizeEntity>, IOrganizeService
     {
+        private Wechat_AgentIService agentService = new Wechat_AgentService();
         #region 获取数据
         /// <summary>
         /// 机构列表
@@ -30,16 +31,15 @@ namespace HZSoft.Application.Service.BaseManage
         /// <returns></returns>
         public IEnumerable<OrganizeEntity> GetList()
         {
-            return this.BaseRepository().IQueryable().OrderBy(t => t.Category).ThenBy(t => t.CreateDate).ToList();
+            //return this.BaseRepository().IQueryable().OrderBy(t => t.Category).ThenBy(t => t.CreateDate).ToList();
 
-            //string strSql = "select * from Base_Organize where DeleteMark <> 1 ";
-            //if (!OperatorProvider.Provider.Current().IsSystem && OperatorProvider.Provider.Current().CompanyId != "207fa1a9-160c-4943-a89b-8fa4db0547ce")
-            //{
-            //    string dataAutor = string.Format(OperatorProvider.Provider.Current().DataAuthorize.ReadAutorize, OperatorProvider.Provider.Current().UserId);
-            //    strSql += " and OrganizeId IN( select OrganizeId from Base_User where 1=1";
-            //    strSql += " and UserId in (" + dataAutor + ") GROUP BY OrganizeId )";
-            //}
-            //return this.BaseRepository().FindList(strSql.ToString());
+            string strSql = "select * from Base_Organize where DeleteMark <> 1 ";
+            if (!OperatorProvider.Provider.Current().IsSystem && OperatorProvider.Provider.Current().UserId != "3303254b-7cd3-4a25-abd3-bb2542a08df9")//龙哥可以查看到所有号码
+            {
+                string companyId = OperatorProvider.Provider.Current().CompanyId;
+                strSql += " and OrganizeId='" + companyId + "'";
+            }
+            return this.BaseRepository().FindList(strSql.ToString());
         }
 
         /// <summary>
@@ -305,8 +305,6 @@ SELECT OrganizeId,Img1,Img2,Img3,Img4 FROM T where DeleteMark <> 1 and ParentId=
                     organizeEntity.Category = 0;
                 }
                 organizeEntity.Create();
-
-                //db.Insert(organizeEntity); 
                 #endregion
 
                 #region 新增默认管理部门
@@ -358,6 +356,7 @@ SELECT OrganizeId,Img1,Img2,Img3,Img4 FROM T where DeleteMark <> 1 and ParentId=
                 #region 新增默认用户
                 UserEntity userEntity = new UserEntity();
                 userEntity.Create();
+                role.EnCode = organizeEntity.OuterPhone;//账号
                 userEntity.Account = organizeEntity.OuterPhone;//登录名为机构名拼音首字母organizeEntity.EnCode
                 userEntity.RealName = organizeEntity.Manager;//organizeEntity.FullName
                 userEntity.WeChat = organizeEntity.ShortName;//微信昵称
@@ -380,7 +379,7 @@ SELECT OrganizeId,Img1,Img2,Img3,Img4 FROM T where DeleteMark <> 1 and ParentId=
                 #endregion
 
                 #region 新增代理表
-                var agentEntity = db.FindEntity<Wechat_AgentEntity>(t => t.OpenId == organizeEntity.ManagerId);
+                var agentEntity = agentService.GetEntityByOpenId(organizeEntity.ManagerId);
                 if (agentEntity == null)
                 {
                     var weChat_Users = db.FindEntity<WeChat_UsersEntity>(t => t.OpenId == organizeEntity.ManagerId);
@@ -399,10 +398,8 @@ SELECT OrganizeId,Img1,Img2,Img3,Img4 FROM T where DeleteMark <> 1 and ParentId=
                             Category = 0,
                             OrganizeId = organizeEntity.OrganizeId,//绑定机构id
                         };
-                        agentEntity.Create();
-                        agentEntity.Tid = agentEntity.Id;
-                        agentEntity.Pid = agentEntity.Id;
-                        db.Insert(agentEntity);
+                        agentEntity.Create();//create得不到id，自增
+                        agentService.SaveForm(null, agentEntity);//提交数据库之后才能拿到id，复制给机构表中的agentid
                     }
                 }
                 else
@@ -436,8 +433,40 @@ SELECT OrganizeId,Img1,Img2,Img3,Img4 FROM T where DeleteMark <> 1 and ParentId=
         {
             if (!string.IsNullOrEmpty(keyValue))
             {
-                organizeEntity.Modify(keyValue);
-                this.BaseRepository().Update(organizeEntity);
+                IRepository db = new RepositoryFactory().BaseRepository().BeginTrans();
+                try
+                {
+                    var oldEntity = GetEntity(organizeEntity.OrganizeId);
+                    if (oldEntity != null)
+                    {
+                        if (organizeEntity.OuterPhone != oldEntity.OuterPhone)
+                        {
+                            //如果电话号码修改，同步修改部门表，用户表
+                            var depEntity = db.FindEntity<DepartmentEntity>(t => t.OrganizeId == organizeEntity.OrganizeId && t.EnCode == oldEntity.OuterPhone);
+                            if (depEntity != null)
+                            {
+                                depEntity.EnCode = organizeEntity.OuterPhone;
+                                db.Update(depEntity);
+                            }
+                            //用户表
+                            var userEntity = db.FindEntity<UserEntity>(t => t.OrganizeId == organizeEntity.OrganizeId && t.EnCode == oldEntity.OuterPhone);
+                            if (userEntity != null)
+                            {
+                                userEntity.Account = organizeEntity.OuterPhone;//登录账号
+                                userEntity.EnCode = organizeEntity.OuterPhone;
+                                db.Update(userEntity);
+                            }
+                        }
+                        db.Commit();
+                    }
+                    organizeEntity.Modify(keyValue);
+                    this.BaseRepository().Update(organizeEntity);
+                }
+                catch (Exception)
+                {
+                    db.Rollback();
+                    throw;
+                }
             }
             else
             {

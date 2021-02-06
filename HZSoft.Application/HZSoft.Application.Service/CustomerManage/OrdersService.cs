@@ -69,13 +69,12 @@ namespace HZSoft.Application.Service.CustomerManage
                 string Tel = queryParam["Tel"].ToString();
                 strSql += " and Tel like '%" + Tel + "%'";
             }
-            //域名
+            //域名或昵称
             if (!queryParam["Host"].IsEmpty())
             {
                 string Host = queryParam["Host"].ToString();
                 strSql += " and Host like '%" + Host + "%'";
             }
-
             //收件人
             if (!queryParam["Receiver"].IsEmpty())
             {
@@ -99,6 +98,18 @@ namespace HZSoft.Application.Service.CustomerManage
             {
                 int PayStatus = queryParam["PayStatus"].ToInt();
                 strSql += " and PayStatus  = " + PayStatus;
+            }
+            //代理id
+            if (!queryParam["AgentId"].IsEmpty())
+            {
+                int AgentId = queryParam["AgentId"].ToInt();
+                strSql += " and AgentId  = " + AgentId;
+            }
+            //默认只查询当前机构下的代理订单
+            if (!OperatorProvider.Provider.Current().IsSystem && OperatorProvider.Provider.Current().UserId != "3303254b-7cd3-4a25-abd3-bb2542a08df9")//龙哥可以查看到所有号码
+            {
+                string companyId = OperatorProvider.Provider.Current().CompanyId;
+                strSql += " and AgentId in (SELECT id FROM Wechat_Agent WHERE OrganizeId='" + companyId + "')";
             }
             return this.BaseRepository().FindList(strSql.ToString(), pagination);
         }

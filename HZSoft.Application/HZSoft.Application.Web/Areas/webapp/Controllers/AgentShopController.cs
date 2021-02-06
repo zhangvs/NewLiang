@@ -307,7 +307,8 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                 if (!OperatorAgentProvider.Provider.IsOverdue())
                 {
                     //连接的代理id
-                    ordersEntity.Host = OperatorAgentProvider.Provider.Current().Id.ToString();// + "，上级:" + OperatorAgentProvider.Provider.Current().Pid.ToString() + "，顶级:" + OperatorAgentProvider.Provider.Current().Tid.ToString()
+                    ordersEntity.Host = OperatorAgentProvider.Provider.Current().nickname;//昵称
+                    ordersEntity.AgentId = OperatorAgentProvider.Provider.Current().Id;
                     ordersEntity.Pid = OperatorAgentProvider.Provider.Current().Pid;
                     ordersEntity.Tid = OperatorAgentProvider.Provider.Current().Tid;
                     ordersEntity.OpenId = CurrentWxUser.OpenId;//购买者OpenId，用于首页展示再次支付提示，方便再次支付

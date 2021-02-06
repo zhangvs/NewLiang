@@ -1,3 +1,4 @@
+using HZSoft.Application.Code;
 using HZSoft.Application.Entity.CustomerManage;
 using HZSoft.Application.IService.CustomerManage;
 using HZSoft.Data.Repository;
@@ -15,7 +16,7 @@ namespace HZSoft.Application.Service.CustomerManage
     /// 
     /// 创 建：超级管理员
     /// 日 期：2020-10-03 16:08
-    /// 描 述：加盟订单
+    /// 描 述：升级订单
     /// </summary>
     public class OrdersJMService : RepositoryFactory<OrdersJMEntity>, OrdersJMIService
     {
@@ -36,19 +37,27 @@ namespace HZSoft.Application.Service.CustomerManage
             {
                 DateTime startTime = queryParam["StartTime"].ToDate();
                 DateTime endTime = queryParam["EndTime"].ToDate().AddDays(1);
-                strSql += " and created_at BETWEEN '" + startTime + "' and '" + endTime + "'";
+                strSql += " and CreateDate BETWEEN '" + startTime + "' and '" + endTime + "'";
             }
             //代理
-            if (!queryParam["agent_name"].IsEmpty())
+            if (!queryParam["NickName"].IsEmpty())
             {
-                string agent_name = queryParam["agent_name"].ToString();
-                strSql += " and nickname = '%" + agent_name + "%'";
+                string NickName = queryParam["NickName"].ToString();
+                strSql += " and NickName = '%" + NickName + "%'";
             }
             //代理id
-            if (!queryParam["agent_id"].IsEmpty())
+            if (!queryParam["AgentId"].IsEmpty())
             {
-                string agent_id = queryParam["agent_id"].ToString();
-                strSql += " and agent_id = " + agent_id;
+                string agent_id = queryParam["AgentId"].ToString();
+                strSql += " and AgentId = " + agent_id;
+            }
+            else
+            {
+                if (!OperatorProvider.Provider.Current().IsSystem && OperatorProvider.Provider.Current().UserId != "3303254b-7cd3-4a25-abd3-bb2542a08df9")//龙哥可以查看到所有号码
+                {
+                    string companyId = OperatorProvider.Provider.Current().CompanyId;
+                    strSql += " and AgentId in (SELECT id FROM Wechat_Agent WHERE OrganizeId='" + companyId + "')";
+                }
             }
             //单号
             if (!queryParam["orderno"].IsEmpty())
@@ -82,16 +91,16 @@ namespace HZSoft.Application.Service.CustomerManage
                 strSql += " and created_at BETWEEN '" + startTime + "' and '" + endTime + "'";
             }
             //代理
-            if (!queryParam["agent_name"].IsEmpty())
+            if (!queryParam["NickName"].IsEmpty())
             {
-                string agent_name = queryParam["agent_name"].ToString();
-                strSql += " and nickname = '%" + agent_name + "%'";
+                string NickName = queryParam["NickName"].ToString();
+                strSql += " and NickName = '%" + NickName + "%'";
             }
             //代理id
-            if (!queryParam["agent_id"].IsEmpty())
+            if (!queryParam["AgentId"].IsEmpty())
             {
-                string agent_id = queryParam["agent_id"].ToString();
-                strSql += " and agent_id = " + agent_id;
+                string AgentId = queryParam["AgentId"].ToString();
+                strSql += " and AgentId = " + AgentId;
             }
             //单号
             if (!queryParam["orderno"].IsEmpty())

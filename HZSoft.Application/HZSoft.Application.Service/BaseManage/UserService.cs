@@ -156,14 +156,20 @@ namespace HZSoft.Application.Service.BaseManage
                 }
             }
 
-            string companyId = OperatorProvider.Provider.Current().CompanyId;
-            if (!OperatorProvider.Provider.Current().IsSystem && companyId != "a5a962da-57e1-4ad4-87b2-bbdcd1b7cc92")
-            {
-                //string dataAutor = string.Format(OperatorProvider.Provider.Current().DataAuthorize.ReadAutorize, OperatorProvider.Provider.Current().UserId);
-                //strSql += " and OrganizeId IN( select OrganizeId from Base_User where 1=1";
-                //strSql += " and UserId in (" + dataAutor + ") GROUP BY OrganizeId )";
-                strSql += " and OrganizeId in(SELECT OrganizeId FROM Base_Organize WHERE OrganizeId='" + OperatorProvider.Provider.Current().CompanyId + "' OR ParentId ='" + OperatorProvider.Provider.Current().CompanyId + "')";
+            //string companyId = OperatorProvider.Provider.Current().CompanyId;
+            //if (!OperatorProvider.Provider.Current().IsSystem && companyId != "a5a962da-57e1-4ad4-87b2-bbdcd1b7cc92")
+            //{
+            //    //string dataAutor = string.Format(OperatorProvider.Provider.Current().DataAuthorize.ReadAutorize, OperatorProvider.Provider.Current().UserId);
+            //    //strSql += " and OrganizeId IN( select OrganizeId from Base_User where 1=1";
+            //    //strSql += " and UserId in (" + dataAutor + ") GROUP BY OrganizeId )";
+            //    strSql += " and OrganizeId in(SELECT OrganizeId FROM Base_Organize WHERE OrganizeId='" + OperatorProvider.Provider.Current().CompanyId + "' OR ParentId ='" + OperatorProvider.Provider.Current().CompanyId + "')";
 
+            //}
+
+            if (!OperatorProvider.Provider.Current().IsSystem && OperatorProvider.Provider.Current().UserId != "3303254b-7cd3-4a25-abd3-bb2542a08df9")//龙哥可以查看到所有号码
+            {
+                string companyId = OperatorProvider.Provider.Current().CompanyId;
+                strSql += " and OrganizeId='" + companyId + "'";
             }
             return this.BaseRepository().FindList(strSql.ToString(), pagination);
             //expression = expression.And(t => t.UserId != "System");

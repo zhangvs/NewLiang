@@ -299,7 +299,6 @@
     <Compile Include="Areas\WeChatManage\Controllers\Certification0Controller.cs" />
     <Compile Include="Areas\WeChatManage\Controllers\LiangApiController.cs" />
     <Compile Include="Areas\WeChatManage\Controllers\LiangController.cs" />
-    <Compile Include="Areas\WeChatManage\Controllers\mpgController.cs" />
     <Compile Include="Areas\WeChatManage\Controllers\ProductController.cs" />
     <Compile Include="Areas\WeChatManage\Controllers\publicController.cs" />
     <Compile Include="Areas\WeChatManage\Controllers\PuMenuController.cs" />
@@ -2000,10 +1999,7 @@
     <Content Include="Areas\WeChatManage\Views\Liang\QrCode.cshtml" />
     <Content Include="Areas\ReportManage\Views\Dms\dms_Sales.cshtml" />
     <Content Include="Areas\WeChatManage\Views\Product\H5Pay.cshtml" />
-    <Content Include="Areas\WeChatManage\Views\mpg\Index.cshtml" />
-    <Content Include="Areas\WeChatManage\Views\mpg\detail.cshtml" />
     <Content Include="assets\wap\css\iconfont.woff2" />
-    <Content Include="Areas\WeChatManage\Views\mpg\flow.cshtml" />
     <Content Include="Areas\WeChatManage\Views\user_order\payment.cshtml" />
     <Content Include="Areas\WeChatManage\Views\user_index\Index.cshtml" />
     <Content Include="Areas\WeChatManage\Views\user_order\index.cshtml" />

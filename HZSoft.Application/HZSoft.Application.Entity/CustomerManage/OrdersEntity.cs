@@ -29,6 +29,11 @@ namespace HZSoft.Application.Entity.CustomerManage
         /// <returns></returns>
         public string Host { get; set; }
         /// <summary>
+        /// 代理id
+        /// </summary>
+        /// <returns></returns>
+        public int? AgentId { get; set; }
+        /// <summary>
         /// 用户ID
         /// </summary>
         /// <returns></returns>
