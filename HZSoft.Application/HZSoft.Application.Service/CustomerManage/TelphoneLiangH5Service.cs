@@ -317,7 +317,7 @@ namespace HZSoft.Application.Service.CustomerManage
             string ownWhere = GetSql(queryJson);
             //×ÔÉí£¬¸¸£¬0¼¶
             string strSql = @" SELECT * FROM (
- SELECT TelphoneID,Telphone,Price,City FROM TelphoneLiangH5 
+ SELECT TelphoneID,Telphone,Price,MinPrice,City FROM TelphoneLiangH5 
  WHERE SellMark<>1 AND DeleteMark<>1 and EnabledMark <> 1 " + ownWhere
                 + " )t ";
             return this.BaseRepository().FindList(strSql.ToString(), pagination);

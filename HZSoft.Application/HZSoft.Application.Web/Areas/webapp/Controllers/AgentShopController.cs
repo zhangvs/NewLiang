@@ -150,19 +150,6 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
         }
 
 
-        public ActionResult product(int? id)
-        {
-            TelphoneLiangH5Entity entity = tlbll.GetEntity(id);
-            if (entity != null)
-            {
-                entity.Price = entity.Price * OperatorAgentProvider.Provider.Current().FuDong;//浮动
-                return View(entity);
-            }
-            else
-            {
-                return Content("号码不存在！");
-            }
-        }
 
         /// <summary>
         /// 模糊搜索等 + '&price=' + price + '&except=' + except + '&yy=' + yuyi;
@@ -248,13 +235,21 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                     {
                         if (telEntity.Price != null)
                         {
-                            telEntity.Price= telEntity.Price * OperatorAgentProvider.Provider.Current().FuDong;//浮动
+                            telEntity.Price = telEntity.Price * OperatorAgentProvider.Provider.Current().FuDong * 0.01M;//浮动
                             //获取返佣金额
                             getDirectDH(telEntity.OrganizeId, agentEntity.Category, out direct, out indirect);
+                            if (direct != 0)
+                            {
+                                direct = telEntity.Price - telEntity.Price * direct;
+                            }
+                            if (indirect != 0)
+                            {
+                                indirect = telEntity.Price - telEntity.Price * indirect;
+                            }
                             Comission comission = new Comission()
                             {
-                                direct = telEntity.Price - telEntity.Price * direct,
-                                indirect = telEntity.Price - telEntity.Price * indirect,
+                                direct = direct,
+                                indirect = indirect,
                             };
                             dataCom.Add(telEntity.Telphone, comission);
 
@@ -273,6 +268,20 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
             else
             {
                 return null;
+            }
+        }
+
+        public ActionResult product(int? id)
+        {
+            TelphoneLiangH5Entity entity = tlbll.GetEntity(id);
+            if (entity != null)
+            {
+                entity.Price = entity.Price * OperatorAgentProvider.Provider.Current().FuDong * 0.01M;//浮动
+                return View(entity);
+            }
+            else
+            {
+                return Content("号码不存在！");
             }
         }
 
