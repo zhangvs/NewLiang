@@ -427,7 +427,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult fudong(decimal? fuDong)
+        public ActionResult FudongUpdate(int? fuDong)
         {
             ReturnJson returnJson = new ReturnJson();
             try

@@ -202,7 +202,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                 sidx = pageInfo.orderby,
                 sord = pageInfo.ordername
             };
-            var data = tlbll.GetPageListH5LX(pagination, whereEntity.ToJson());
+            var data = tlbll.GetPageListH5(pagination, whereEntity.ToJson());
 
             var jsonData = new
             {
@@ -238,18 +238,10 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                             telEntity.Price = telEntity.Price * OperatorAgentProvider.Provider.Current().FuDong * 0.01M;//浮动
                             //获取返佣金额
                             getDirectDH(telEntity.OrganizeId, agentEntity.Category, out direct, out indirect);
-                            if (direct != 0)
-                            {
-                                direct = telEntity.Price - telEntity.Price * direct;
-                            }
-                            if (indirect != 0)
-                            {
-                                indirect = telEntity.Price - telEntity.Price * indirect;
-                            }
                             Comission comission = new Comission()
                             {
-                                direct = direct,
-                                indirect = indirect,
+                                direct = telEntity.Price * direct,
+                                indirect = telEntity.Price * indirect
                             };
                             dataCom.Add(telEntity.Telphone, comission);
 

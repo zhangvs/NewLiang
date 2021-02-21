@@ -248,7 +248,7 @@ namespace HZSoft.Application.Service.BaseManage
         /// </summary>
         /// <param name="fuDong">Ö÷¼üÖµ</param>
         /// <returns></returns>
-        public void FuDongUpdate(int? keyValue,decimal? fuDong)
+        public void FuDongUpdate(int? keyValue,int? fuDong)
         {
             IRepository db = new RepositoryFactory().BaseRepository().BeginTrans();
             if (!string.IsNullOrEmpty(keyValue.ToString()))

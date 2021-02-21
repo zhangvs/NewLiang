@@ -117,7 +117,7 @@ namespace HZSoft.Application.Busines.BaseManage
         /// </summary>
         /// <param name="keyValue">Ö÷¼üÖµ</param>
         /// <returns></returns>
-        public void FuDongUpdate(int? keyValue, decimal? fuDong)
+        public void FuDongUpdate(int? keyValue, int? fuDong)
         {
             try
             {

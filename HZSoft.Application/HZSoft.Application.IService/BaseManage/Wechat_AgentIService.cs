@@ -62,7 +62,7 @@ namespace HZSoft.Application.IService.BaseManage
         /// <summary>
         /// 浮动比例调整
         /// </summary>
-        void FuDongUpdate(int? keyValue, decimal? fuDong);
+        void FuDongUpdate(int? keyValue, int? fuDong);
 
 
         #endregion

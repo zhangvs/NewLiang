@@ -312,34 +312,17 @@ namespace HZSoft.Application.Service.CustomerManage
         /// <param name="pagination"></param>
         /// <param name="queryJson"></param>
         /// <returns></returns>
-        public IEnumerable<TelphoneLiangH5Entity> GetPageListH5LX(Pagination pagination, string queryJson)
+        public IEnumerable<TelphoneLiangH5Entity> GetPageListH5(Pagination pagination, string queryJson)
         {
             string ownWhere = GetSql(queryJson);
             //自身，父，0级
             string strSql = @" SELECT * FROM (
- SELECT TelphoneID,Telphone,Price,MinPrice,City FROM TelphoneLiangH5 
+ SELECT TelphoneID,Telphone,Price,MinPrice,City,OrganizeId FROM TelphoneLiangH5 
  WHERE SellMark<>1 AND DeleteMark<>1 and EnabledMark <> 1 " + ownWhere
                 + " )t ";
             return this.BaseRepository().FindList(strSql.ToString(), pagination);
         }
-
-
-
-        /// <summary>
-        /// CheckPrice低价
-        /// </summary>
-        /// <param name="pagination"></param>
-        /// <param name="queryJson"></param>
-        /// <returns></returns>
-        public IEnumerable<TelphoneLiangH5Entity> GetPageListH5LX_JS(Pagination pagination, string queryJson)
-        {
-            string ownWhere = GetSql(queryJson);
-            //自身，父，0级
-            string strSql = @" SELECT * FROM (
- SELECT TelphoneID,Telphone,CheckPrice Price,City FROM TelphoneLiangH5 
- WHERE SellMark<>1 AND DeleteMark<>1 and EnabledMark <> 1 AND CheckPrice>0 " + ownWhere + " )t ";
-            return this.BaseRepository().FindList(strSql.ToString(), pagination);
-        }
+        
         
         /// <summary>
         /// 获取列表
@@ -351,8 +334,8 @@ namespace HZSoft.Application.Service.CustomerManage
             string ownWhere = GetSql(queryJson);
             //自身，父，0级
             string strSql = @" SELECT * FROM (
- SELECT TelphoneID,Telphone,CheckPrice Price,City FROM TelphoneLiangH5 
- WHERE SellMark<>1 AND DeleteMark<>1 and EnabledMark <> 1 AND CheckPrice>0 " + ownWhere + " )t ";
+ SELECT TelphoneID,Telphone,Price,MinPrice,City,OrganizeId FROM TelphoneLiangH5 
+ WHERE SellMark<>1 AND DeleteMark<>1 and EnabledMark <> 1 " + ownWhere + " )t ";
             return this.BaseRepository().FindList(strSql.ToString());
         }
         /// <summary>

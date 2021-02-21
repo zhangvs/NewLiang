@@ -19,11 +19,6 @@ namespace HZSoft.Application.Entity.BaseManage
         /// <returns></returns>
         public int? Id { get; set; }
         /// <summary>
-        /// 价格浮动比例上下10%
-        /// </summary>
-        /// <returns></returns>
-        public decimal? FuDong { get; set; }
-        /// <summary>
         /// 等级
         /// </summary>
         /// <returns></returns>
@@ -38,6 +33,11 @@ namespace HZSoft.Application.Entity.BaseManage
         /// </summary>
         /// <returns></returns>
         public int? Tid { get; set; }
+        /// <summary>
+        /// 价格浮动比例上下10%
+        /// </summary>
+        /// <returns></returns>
+        public int? FuDong { get; set; }
         /// <summary>
         /// 微信用户标识
         /// </summary>

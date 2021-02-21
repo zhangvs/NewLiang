@@ -140,7 +140,7 @@ namespace HZSoft.Application.Code
         /// 价格浮动比例上下10%
         /// </summary>
         /// <returns></returns>
-        public decimal? FuDong { get; set; }
+        public int? FuDong { get; set; }
         /// <summary>
         /// 登录代理所属机构id
         /// </summary>

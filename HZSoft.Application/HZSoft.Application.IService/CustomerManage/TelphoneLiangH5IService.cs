@@ -23,8 +23,7 @@ namespace HZSoft.Application.IService.CustomerManage
         /// <returns>返回分页列表</returns>
         IEnumerable<TelphoneLiangH5Entity> GetPageList(Pagination pagination, string queryJson);
         IEnumerable<TelphoneLiangH5Entity> GetPageListGongHai(Pagination pagination, string queryJson);
-        IEnumerable<TelphoneLiangH5Entity> GetPageListH5LX(Pagination pagination, string queryJson);
-        IEnumerable<TelphoneLiangH5Entity> GetPageListH5LX_JS(Pagination pagination, string queryJson);
+        IEnumerable<TelphoneLiangH5Entity> GetPageListH5(Pagination pagination, string queryJson);
         /// <summary>
         /// 获取列表
         /// </summary>
