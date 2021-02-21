@@ -40,7 +40,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
         public ActionResult Index(int? id)
         {
             //1.2根据注册的微信id去用户表中匹配是否有此员工
-            Wechat_AgentEntity agentEntity = agentBll.GetEntityByOpenId("o7HEd1LjnupfP0BBBMz5f69MFYVE");//
+            Wechat_AgentEntity agentEntity = agentBll.GetEntityByOpenId(CurrentWxUser.OpenId);//o7HEd1LjnupfP0BBBMz5f69MFYVE
             if (agentEntity == null)
             {
                 int? tid = null;
@@ -415,6 +415,11 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
         [HttpGet]
         public ActionResult fudong(int? id)
         {
+            var agentEntity = agentBll.GetEntityByOpenId(CurrentWxUser.OpenId);
+            if (agentEntity != null)
+            {
+                ViewBag.fuDong = agentEntity.FuDong;
+            }
             return View();
         }
         /// <summary>

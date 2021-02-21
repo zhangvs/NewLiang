@@ -398,7 +398,29 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                                     break;
                                 }
                             }
+                        }
 
+                        //给0级返本金
+                        var orgEntity = organizeBLL.GetEntity(ordersEntity.OrganizeId);
+                        if (orgEntity!=null)
+                        {
+                            var tidEntity = agentBll.GetEntity(orgEntity.AgentId);
+                            if (tidEntity != null)
+                            {
+                                ComissionLogEntity logEntity = new ComissionLogEntity()
+                                {
+                                    agent_id = tidEntity.Id,
+                                    agent_name = tidEntity.nickname,
+                                    indirect = 1,
+                                    invited_agent_id = 0,
+                                    phonenum = ordersEntity.Tel,
+                                    profit = ordersEntity.Price - direct - indirect - ordersEntity.Price * 0.01M,//本金=售价-佣金合计-售价0.01
+                                    status = 0,
+                                    orderno = ordersEntity.OrderSn,
+                                    orderid = ordersEntity.Id
+                                };
+                                comissionLogBll.SaveForm(null, logEntity);
+                            }
                         }
                     }
 
