@@ -184,6 +184,8 @@ namespace HZSoft.Application.Entity.BaseManage
             this.EnabledMark = 1;
             this.SeeCount = 0;
             this.SellCount = 0;
+            this.childcount = 0;
+            this.childprofit = 0;
         }
         /// <summary>
         /// ±à¼­µ÷ÓÃ

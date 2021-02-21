@@ -27,8 +27,8 @@
                             @Model.Category 级代理
                         </p>
                         @*<div class="btn_wrap">
-                            <a href="/webapp/agent/upgrade?id=@Model.Id">立即升级</a>
-                        </div>*@
+                                <a href="/webapp/agent/upgrade?id=@Model.Id">立即升级</a>
+                            </div>*@
                     </div>
                 </div>
                 <div class="total_money">
@@ -36,7 +36,7 @@
                     <p class="price_wrap">
                         <small>￥</small><strong id="ba-eye" data-type="password" class="balance ba-eye">***</strong>
                         提现中:
-                                        <small class="ba-eye locked-balance">***</small><i onclick="showhide()" id="eye" class="fa fa-eye"></i>
+                        <small class="ba-eye locked-balance">***</small><i onclick="showhide()" id="eye" class="fa fa-eye"></i>
                     </p>
                     <p>
                         <small>*此金额包括:已支付未入账/已入账/邀请代理 佣金</small>
@@ -51,44 +51,44 @@
                 <div class="list flex comissionSummary">
                     <div class="team_item">
                         <h4 class="level_name i_icon"><label>1</label><strong>下级代理</strong></h4>
-                        <strong style="margin: 20px;font-size: 20px;">@Model.childcount</strong><span>人</span>
+                        <strong style="font-size: 18px;">@Model.childcount</strong><span>人</span>
                     </div>
                     <div class="team_item">
                         <h4 class="level_name i_icon"><label>2</label><strong>浏览量</strong></h4>
-                        <strong style="margin: 20px;font-size: 20px;">@Model.SeeCount</strong><span>次</span>
+                        <strong style="font-size: 18px;">@Model.SeeCount</strong><span>次</span>
                     </div>
                     <div class="team_item">
                         <h4 class="level_name i_icon"><label>3</label><strong>销售额</strong></h4>
-                        <strong style="margin: 20px;font-size: 20px;">@Model.SellCount</strong><span>元</span>
+                        <strong style="font-size: 18px;">@Model.SellCount</strong><span>元</span>
                     </div>
                 </div>
             </section>
             <section class="link_list">
                 @if (Model.Category < 4)
-    {
-            <p>
-                <a href="/webapp/agent/invitation?id=@Model.Id" class="i_icon invitation_link">邀请代理</a>
-            </p>
-}
+                {
+                    <p>
+                        <a href="/webapp/agent/invitation?id=@Model.Id" class="i_icon invitation_link">邀请代理</a>
+                    </p>
+                }
                 @if (Model.Category == 2)
-   {
-            <p>
-                <a href="/webapp/agent/fudong?id=@Model.Id" class="i_icon commission_link">售价调整</a>
-            </p>
-}
+                {
+                    <p>
+                        <a href="/webapp/agent/fudong?id=@Model.Id" class="i_icon commission_link">售价调整</a>
+                    </p>
+                }
 
-            <p>
-                <a href="/webapp/agent/commission?id=@Model.Id" class="i_icon commission_link">佣金明细</a>
-            </p>
-            <p>
-                <a href="/webapp/agent/withdrawLogs?id=@Model.Id" class="i_icon withdrawal_link">提现记录</a>
-            </p>
-            <p>
-                <a href="/webapp/agent/profile?id=@Model.Id" class="i_icon agent_link">个人资料</a>
-            </p>
-            <p>
-                <a href="/webapp/agentshop/index?id=@Model.Id" class="i_icon agent_link">我的商城</a>
-            </p>
+                <p>
+                    <a href="/webapp/agent/commission?id=@Model.Id" class="i_icon commission_link">佣金明细</a>
+                </p>
+                <p>
+                    <a href="/webapp/agent/withdrawLogs?id=@Model.Id" class="i_icon withdrawal_link">提现记录</a>
+                </p>
+                <p>
+                    <a href="/webapp/agent/profile?id=@Model.Id" class="i_icon agent_link">个人资料</a>
+                </p>
+                <p>
+                    <a href="/webapp/agentshop/index?id=@Model.Id" class="i_icon agent_link">我的商城</a>
+                </p>
             </section>
         </div>
     </article>

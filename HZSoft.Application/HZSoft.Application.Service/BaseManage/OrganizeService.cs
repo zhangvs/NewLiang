@@ -400,6 +400,10 @@ SELECT OrganizeId,Img1,Img2,Img3,Img4 FROM T where DeleteMark <> 1 and ParentId=
                         };
                         agentEntity.Create();//create得不到id，自增
                         agentService.SaveForm(null, agentEntity);//提交数据库之后才能拿到id，复制给机构表中的agentid
+                        //更新id，0级机构上级和顶级都是本机构
+                        agentEntity.Pid = agentEntity.Id;
+                        agentEntity.Tid = agentEntity.Id;
+                        agentService.SaveForm(agentEntity.Id, agentEntity);
                     }
                 }
                 else
@@ -407,6 +411,9 @@ SELECT OrganizeId,Img1,Img2,Img3,Img4 FROM T where DeleteMark <> 1 and ParentId=
                     if (string.IsNullOrEmpty(agentEntity.OrganizeId))
                     {
                         agentEntity.OrganizeId = organizeEntity.OrganizeId;//如果不存在代理机构id，
+                        //更新id，0级机构上级和顶级都是本机构
+                        agentEntity.Pid = agentEntity.Id;
+                        agentEntity.Tid = agentEntity.Id;
                         db.Update(agentEntity);
                     }
                 }

@@ -43,7 +43,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
             ViewBag.OpenId = 0;
             ViewBag.is_agent = 0;
             ViewBag.Style = "none";
-
+            ViewBag.StyleMinPrice = "none";
             //根据当前id，查询是哪个代理，把写入当前用户信息
             Wechat_AgentEntity agentEntity = agentBll.GetEntity(id);//"oQU_IwcWO42_aBNVXcVzungZA0uw"
             if (agentEntity != null)
@@ -94,11 +94,19 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                     if (agentEntityWX != null)
                     {
                         //只有二级三级才返佣金
-                        if (agentEntityWX.Category == 2 || agentEntityWX.Category == 3)
+                        if (agentEntityWX.Category <= 3)
                         {
                             ViewBag.OpenId = agentEntity.OpenId;
                             ViewBag.is_agent = 1;
                             ViewBag.Style = "display";
+                        }
+                        //只有二级三级才返佣金
+                        if (agentEntityWX.Category <= 2)
+                        {
+                            ViewBag.OpenId = agentEntity.OpenId;
+                            ViewBag.is_agent = 1;
+                            ViewBag.Style = "display";
+                            ViewBag.StyleMinPrice = "display";
                         }
                     }
                 }
@@ -147,6 +155,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
             TelphoneLiangH5Entity entity = tlbll.GetEntity(id);
             if (entity != null)
             {
+                entity.Price = entity.Price * OperatorAgentProvider.Provider.Current().FuDong;//浮动
                 return View(entity);
             }
             else
@@ -239,6 +248,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                     {
                         if (telEntity.Price != null)
                         {
+                            telEntity.Price= telEntity.Price * OperatorAgentProvider.Provider.Current().FuDong;//浮动
                             //获取返佣金额
                             getDirectDH(telEntity.OrganizeId, agentEntity.Category, out direct, out indirect);
                             Comission comission = new Comission()
