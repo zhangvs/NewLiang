@@ -27,6 +27,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
 {
     public class AgentShopController : Controller
     {
+        private OrganizeBLL organizeBLL = new OrganizeBLL();
         private TelphoneLiangH5BLL tlbll = new TelphoneLiangH5BLL();
         private Wechat_AgentBLL agentBll = new Wechat_AgentBLL();
         private ComissionLogBLL comissionLogBll = new ComissionLogBLL();
@@ -92,11 +93,18 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                     //只有当前登录者是代理的时候，才显示低价
                     if (agentEntityWX != null)
                     {
-                        ViewBag.OpenId = agentEntity.OpenId;
-                        ViewBag.is_agent = 1;
-                        ViewBag.Style = "display";
+                        //只有二级三级才返佣金
+                        if (agentEntityWX.Category == 2 || agentEntityWX.Category == 3)
+                        {
+                            ViewBag.OpenId = agentEntity.OpenId;
+                            ViewBag.is_agent = 1;
+                            ViewBag.Style = "display";
+                        }
                     }
                 }
+                //浏览量自增·1
+                agentBll.SeeCountAdd(id);
+
             }
 
             return View();
@@ -127,7 +135,9 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
             operators.IPAddressName = IPLocation.GetLocation(Net.Ip);
             operators.LogTime = DateTime.Now;
             operators.Token = DESEncrypt.Encrypt(Guid.NewGuid().ToString());
-
+            operators.FuDong = agentEntity.FuDong;
+            operators.OrganizeId = agentEntity.OrganizeId;
+            operators.Category = agentEntity.Category;
             OperatorAgentProvider.Provider.AddCurrent(operators);
         }
 
@@ -196,7 +206,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                 sidx = pageInfo.orderby,
                 sord = pageInfo.ordername
             };
-            var data = tlbll.GetPageListH5LX_JS(pagination, whereEntity.ToJson());
+            var data = tlbll.GetPageListH5LX(pagination, whereEntity.ToJson());
 
             var jsonData = new
             {
@@ -204,7 +214,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                 data = data,
                 last_page = pagination.total,
                 total = pagination.records,
-                discount = 100//折扣100.相当于不打折
+                discount = OperatorAgentProvider.Provider.Current().FuDong//折扣100.相当于不打折
             };
             return Json(jsonData);
         }
@@ -218,8 +228,8 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
             var agentEntity = agentBll.GetEntityByOpenId(openid);
             if (agentEntity != null)
             {
-                decimal direct = 0;
-                decimal indirect = 0;
+                decimal? direct = 0;
+                decimal? indirect = 0;
                 Dictionary<string, Comission> dataCom = new Dictionary<string, Comission>();
 
                 var entityList = tlbll.GetList("{\"Telphones\":\"" + mobile + "\"}");
@@ -230,13 +240,14 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                         if (telEntity.Price != null)
                         {
                             //获取返佣金额
-                            getDirect(telEntity.Price, agentEntity.LV, out direct, out indirect);
+                            getDirectDH(telEntity.OrganizeId, agentEntity.Category, out direct, out indirect);
                             Comission comission = new Comission()
                             {
                                 direct = telEntity.Price - telEntity.Price * direct,
-                                indirect = indirect
+                                indirect = telEntity.Price - telEntity.Price * indirect,
                             };
                             dataCom.Add(telEntity.Telphone, comission);
+
                         }
                     }
                 }
@@ -317,25 +328,29 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
 
                     if (!string.IsNullOrEmpty(OperatorAgentProvider.Provider.Current().Id.ToString()))
                     {
-                        decimal direct = 0;
-                        decimal indirect = 0;
-                        getDirect(ordersEntity.Price, OperatorAgentProvider.Provider.Current().LV, out direct, out indirect);
-                        //直接号码返佣
-                        ComissionLogEntity logEntity = new ComissionLogEntity()
-                        {
-                            agent_id = OperatorAgentProvider.Provider.Current().Id,
-                            agent_name = OperatorAgentProvider.Provider.Current().nickname,
-                            indirect = 0,
-                            invited_agent_id = 0,
-                            phonenum = ordersEntity.Tel,
-                            profit = ordersEntity.Price - ordersEntity.Price * direct,//佣金=原价格-原价格*折扣
-                            status = 0,
-                            orderno = ordersEntity.OrderSn,
-                            orderid = ordersEntity.Id
-                        };
-                        comissionLogBll.SaveForm(null, logEntity);
+                        decimal? direct = 0;
+                        decimal? indirect = 0;
 
-                        if (!string.IsNullOrEmpty(OperatorAgentProvider.Provider.Current().Pid.ToString()))
+                        getDirectDH(ordersEntity.OrganizeId, OperatorAgentProvider.Provider.Current().Category, out direct, out indirect);
+                        if (direct != 0)
+                        {
+                            //直接号码返佣
+                            ComissionLogEntity logEntity = new ComissionLogEntity()
+                            {
+                                agent_id = OperatorAgentProvider.Provider.Current().Id,
+                                agent_name = OperatorAgentProvider.Provider.Current().nickname,
+                                indirect = 0,
+                                invited_agent_id = 0,
+                                phonenum = ordersEntity.Tel,
+                                profit = ordersEntity.Price - ordersEntity.Price * direct,//佣金=原价格-原价格*折扣
+                                status = 0,
+                                orderno = ordersEntity.OrderSn,
+                                orderid = ordersEntity.Id
+                            };
+                            comissionLogBll.SaveForm(null, logEntity);
+                        }
+
+                        if (indirect!=0)
                         {
                             //间接号码返佣
                             ComissionLogEntity logEntity2 = new ComissionLogEntity()
@@ -351,6 +366,39 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                                 orderid = ordersEntity.Id
                             };
                             comissionLogBll.SaveForm(null, logEntity2);
+                        }
+
+                        //代售 产生的订单佣金(售价30%)返给对应1级(由1级自由分配)
+                        if (ordersEntity.OrganizeId != OperatorAgentProvider.Provider.Current().OrganizeId)
+                        {
+                            //根据当前代理找到1级
+                            var entity = agentBll.GetEntity(OperatorAgentProvider.Provider.Current().Id);
+                            for (int i = 0; i < 3; i++)
+                            {
+                                if (entity.Category!=1)
+                                {
+                                    entity=agentBll.GetEntity(entity.Pid);
+                                }
+                                else
+                                {                            
+                                    //给1级返佣30%
+                                    ComissionLogEntity logEntity = new ComissionLogEntity()
+                                    {
+                                        agent_id = entity.Id,
+                                        agent_name = entity.nickname,
+                                        indirect = 1,
+                                        invited_agent_id = 0,
+                                        phonenum = ordersEntity.Tel,
+                                        profit = ordersEntity.Price - ordersEntity.Price * 0.3M,//佣金=原价格-原价格*折扣
+                                        status = 0,
+                                        orderno = ordersEntity.OrderSn,
+                                        orderid = ordersEntity.Id
+                                    };
+                                    comissionLogBll.SaveForm(null, logEntity);
+                                    break;
+                                }
+                            }
+
                         }
                     }
 

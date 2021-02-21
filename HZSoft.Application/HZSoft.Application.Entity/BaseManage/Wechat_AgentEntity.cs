@@ -158,6 +158,16 @@ namespace HZSoft.Application.Entity.BaseManage
         /// </summary>
         /// <returns></returns>
         public string OrganizeId { get; set; }
+        /// <summary>
+        /// 浏览量
+        /// </summary>
+        /// <returns></returns>
+        public int? SeeCount { get; set; }
+        /// <summary>
+        /// 销售额
+        /// </summary>
+        /// <returns></returns>
+        public decimal? SellCount { get; set; }
         #endregion
 
         #region 扩展操作
@@ -172,6 +182,8 @@ namespace HZSoft.Application.Entity.BaseManage
             this.Cashouted = 0;
             this.DeleteMark = 0;
             this.EnabledMark = 1;
+            this.SeeCount = 0;
+            this.SellCount = 0;
         }
         /// <summary>
         /// 编辑调用

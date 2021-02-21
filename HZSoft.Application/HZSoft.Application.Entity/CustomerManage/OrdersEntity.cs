@@ -188,6 +188,11 @@ namespace HZSoft.Application.Entity.CustomerManage
         /// </summary>
         /// <returns></returns>
         public string TouUrl { get; set; }
+        /// <summary>
+        /// 号码所属机构
+        /// </summary>
+        /// <returns></returns>
+        public string OrganizeId { get; set; }
         #endregion
 
         #region 扩展操作

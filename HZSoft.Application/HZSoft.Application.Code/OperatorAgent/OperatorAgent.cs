@@ -136,5 +136,19 @@ namespace HZSoft.Application.Code
         /// 登录Token
         /// </summary>
         public string Token { get; set; }
+        /// <summary>
+        /// 价格浮动比例上下10%
+        /// </summary>
+        /// <returns></returns>
+        public decimal? FuDong { get; set; }
+        /// <summary>
+        /// 登录代理所属机构id
+        /// </summary>
+        public string OrganizeId { get; set; }
+        /// <summary>
+        /// 登录代理所属机构级别
+        /// </summary>
+        public int? Category { get; set; }
+
     }
 }

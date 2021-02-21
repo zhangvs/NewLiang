@@ -6,6 +6,8 @@ using System.Net;
 using System.Text;
 using Newtonsoft.Json.Linq;
 using HZSoft.Util;
+using HZSoft.Application.Code;
+using HZSoft.Application.Busines.BaseManage;
 
 namespace HZSoft.Application.Web.Utility
 {
@@ -118,7 +120,51 @@ namespace HZSoft.Application.Web.Utility
             }
 
         }
-        public static void getDirect(decimal? price, string lv, out decimal direct, out decimal indirect)
+
+        private static OrganizeBLL organizeBLL = new OrganizeBLL();
+
+        public static void getDirectDH(string organizeId, int? lv, out decimal? direct, out decimal? indirect)
+        {
+            //代售 产生的订单佣金(售价30%)返给对应1级(由1级自由分配)
+            if (organizeId != OperatorAgentProvider.Provider.Current().OrganizeId)
+            {
+                direct = null;
+                indirect = null;
+            }
+            else
+            {
+                //获取当前机构的二级三级返佣比例,不是当前代理的机构ID,而是当前号码的机构ID的返佣比例
+                var org = organizeBLL.GetEntity(organizeId);
+                if (org != null)
+                {
+                    decimal? YongRatio2 = org.YongRatio2;
+                    decimal? YongRatio3 = org.YongRatio3;
+                    direct = 0;
+                    indirect = 0;
+                    if (lv == 4 || lv == 3)
+                    {
+                        direct = YongRatio2;
+                        indirect = YongRatio3;
+                    }
+                    else if (lv == 2)
+                    {
+                        direct = 0.3M;
+                        indirect = 0;
+                    }
+                    else
+                    {
+                        direct = 0;
+                        indirect = 0;
+                    }
+                }
+                else
+                {
+                    direct = 0;
+                    indirect = 0;
+                }
+            }
+        }
+        public static void getDirectLX(decimal? price, string lv, out decimal direct, out decimal indirect)
         {
             direct = 0;
             indirect = 0;

@@ -168,7 +168,7 @@ namespace HZSoft.Application.Service.BaseManage
         /// <returns></returns>
         public IEnumerable<Wechat_AgentEntity> GetSumItem(int? pid)
         {
-            return this.BaseRepository().FindList("select sum(profit) childprofit,count(*) childcount,lv from Wechat_Agent where DeleteMark <> 1 AND pid=" + pid + " GROUP BY lv");
+            return this.BaseRepository().FindList("select sum(profit) childprofit,count(*) childcount from Wechat_Agent where DeleteMark <> 1 AND pid=" + pid );
         }
         #endregion
 
@@ -202,9 +202,19 @@ namespace HZSoft.Application.Service.BaseManage
                     var pidEntity = GetEntity(entity.Pid);
                     if (pidEntity!=null)
                     {
+                        pidEntity.childcount++;//上级代理：下级个数+1
                         this.BaseRepository().Update(pidEntity);
+
                         entity.Category = pidEntity.Category + 1;//代理级别为上级的级别+1
                         entity.OrganizeId = pidEntity.OrganizeId;//设置机构id为上级机构id
+                        if (pidEntity.FuDong!=null)
+                        {
+                            entity.FuDong = pidEntity.FuDong;//浮动默认为上级浮动值
+                        }
+                        else
+                        {
+                            entity.FuDong = 100;//默认为100
+                        }
                     }
                     else
                     {
@@ -214,6 +224,58 @@ namespace HZSoft.Application.Service.BaseManage
 
                 entity.Create();
                 this.BaseRepository().Insert(entity);
+            }
+        }
+        /// <summary>
+        /// 浏览量自增
+        /// </summary>
+        /// <param name="keyValue">主键值</param>
+        /// <returns></returns>
+        public void SeeCountAdd(int? keyValue)
+        {
+            if (!string.IsNullOrEmpty(keyValue.ToString()))
+            {
+                var entity = GetEntity(keyValue);
+                if (entity != null)
+                {
+                    entity.SeeCount++;
+                    this.BaseRepository().Update(entity);
+                }
+            }
+        }
+        /// <summary>
+        /// 浮动比例调整
+        /// </summary>
+        /// <param name="fuDong">主键值</param>
+        /// <returns></returns>
+        public void FuDongUpdate(int? keyValue,decimal? fuDong)
+        {
+            IRepository db = new RepositoryFactory().BaseRepository().BeginTrans();
+            if (!string.IsNullOrEmpty(keyValue.ToString()))
+            {
+                var entity = GetEntity(keyValue);
+                if (entity != null)
+                {
+                    entity.FuDong= fuDong;
+                    db.Update(entity);
+
+                    //同步修改下级的浮动值
+                    //先获取3级
+                    var list3 = GetList("{\"Pid\":\"" + keyValue + "\"}");
+                    foreach (var item3 in list3)
+                    {
+                        item3.FuDong = fuDong;
+                        db.Update(item3);
+                        //再获取4级
+                        var list4 = GetList("{\"Pid\":\"" + item3.Id + "\"}");
+                        foreach (var item4 in list4)
+                        {
+                            item4.FuDong = fuDong;
+                            db.Update(item4);
+                        }
+                    }
+                    db.Commit();
+                }
             }
         }
         #endregion

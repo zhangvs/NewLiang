@@ -291,6 +291,19 @@ namespace HZSoft.Application.Service.CustomerManage
             strSql += GetSql(queryJson);
             return this.BaseRepository().FindList(strSql.ToString(), pagination);
         }
+        /// <summary>
+        /// 获取列表
+        /// </summary>
+        /// <param name="pagination">分页</param>
+        /// <param name="queryJson">查询参数</param>
+        /// <returns>返回分页列表</returns>
+        public IEnumerable<TelphoneLiangH5Entity> GetPageListGongHai(Pagination pagination, string queryJson)
+        {
+            var queryParam = queryJson.ToJObject();
+            string strSql = "select * from TelphoneLiangH5 where DeleteMark <> 1 and EnabledMark <> 1 and ShareMark =1 ";
+            strSql += GetSql(queryJson);
+            return this.BaseRepository().FindList(strSql.ToString(), pagination);
+        }
 
 
         /// <summary>

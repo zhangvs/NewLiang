@@ -96,6 +96,38 @@ namespace HZSoft.Application.Busines.BaseManage
                 throw;
             }
         }
+        /// <summary>
+        /// 浏览量自增
+        /// </summary>
+        /// <param name="keyValue">主键值</param>
+        /// <returns></returns>
+        public void SeeCountAdd(int? keyValue)
+        {
+            try
+            {
+                service.SeeCountAdd(keyValue);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// 浮动调整比例
+        /// </summary>
+        /// <param name="keyValue">主键值</param>
+        /// <returns></returns>
+        public void FuDongUpdate(int? keyValue, decimal? fuDong)
+        {
+            try
+            {
+                service.FuDongUpdate(keyValue, fuDong);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
         #endregion
     }
 }

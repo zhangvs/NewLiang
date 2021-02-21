@@ -24,11 +24,11 @@
                     <h3 class="name no_wrap agent_name">@Model.nickname</h3>
                     <div class="handler flex">
                         <p class="level i_icon level_name">
-                            @Model.LV
+                            @Model.Category 级代理
                         </p>
-                        <div class="btn_wrap">
+                        @*<div class="btn_wrap">
                             <a href="/webapp/agent/upgrade?id=@Model.Id">立即升级</a>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
                 <div class="total_money">
@@ -47,53 +47,48 @@
                 </div>
             </section>
             <section class="team_info">
-                <h3 class="i_icon"><strong>团队概况</strong></h3>
+                <h3 class="i_icon"><strong>概况</strong></h3>
                 <div class="list flex comissionSummary">
                     <div class="team_item">
-                        <h4 class="level_name i_icon"><label>1</label><strong>普通代理</strong></h4>
-                        <p>
-                            <label>人数：</label><strong>@ViewBag.V1Count</strong><span>人</span>
-                        </p>
-                        <p>
-                            <label>佣金：</label><strong>@ViewBag.V1Commission</strong><span>元</span>
-                        </p>
+                        <h4 class="level_name i_icon"><label>1</label><strong>下级代理</strong></h4>
+                        <strong style="margin: 20px;font-size: 20px;">@Model.childcount</strong><span>人</span>
                     </div>
                     <div class="team_item">
-                        <h4 class="level_name i_icon"><label>2</label><strong>黄金代理</strong></h4>
-                        <p>
-                            <label>人数：</label><strong>@ViewBag.V2Count</strong><span>人</span>
-                        </p>
-                        <p>
-                            <label>佣金：</label><strong>@ViewBag.V2Commission</strong><span>元</span>
-                        </p>
+                        <h4 class="level_name i_icon"><label>2</label><strong>浏览量</strong></h4>
+                        <strong style="margin: 20px;font-size: 20px;">@Model.SeeCount</strong><span>次</span>
                     </div>
                     <div class="team_item">
-                        <h4 class="level_name i_icon"><label>3</label><strong>钻石代理</strong></h4>
-                        <p>
-                            <label>人数：</label><strong>@ViewBag.V3Count</strong><span>人</span>
-                        </p>
-                        <p>
-                            <label>佣金：</label><strong>@ViewBag.V3Commission</strong><span>元</span>
-                        </p>
+                        <h4 class="level_name i_icon"><label>3</label><strong>销售额</strong></h4>
+                        <strong style="margin: 20px;font-size: 20px;">@Model.SellCount</strong><span>元</span>
                     </div>
                 </div>
             </section>
             <section class="link_list">
-                <p>
-                    <a href="/webapp/agent/invitation?id=@Model.Id" class="i_icon invitation_link">邀请代理</a>
-                </p>
-                <p>
-                    <a href="/webapp/agent/commission?id=@Model.Id" class="i_icon commission_link">佣金明细</a>
-                </p>
-                <p>
-                    <a href="/webapp/agent/withdrawLogs?id=@Model.Id" class="i_icon withdrawal_link">提现记录</a>
-                </p>
-                <p>
-                    <a href="/webapp/agent/profile?id=@Model.Id" class="i_icon agent_link">个人资料</a>
-                </p>
-                <p>
-                    <a href="/webapp/agentshop/index?id=@Model.Id" class="i_icon agent_link">我的商城</a>
-                </p>
+                @if (Model.Category < 4)
+    {
+            <p>
+                <a href="/webapp/agent/invitation?id=@Model.Id" class="i_icon invitation_link">邀请代理</a>
+            </p>
+}
+                @if (Model.Category == 2)
+   {
+            <p>
+                <a href="/webapp/agent/fudong?id=@Model.Id" class="i_icon commission_link">售价调整</a>
+            </p>
+}
+
+            <p>
+                <a href="/webapp/agent/commission?id=@Model.Id" class="i_icon commission_link">佣金明细</a>
+            </p>
+            <p>
+                <a href="/webapp/agent/withdrawLogs?id=@Model.Id" class="i_icon withdrawal_link">提现记录</a>
+            </p>
+            <p>
+                <a href="/webapp/agent/profile?id=@Model.Id" class="i_icon agent_link">个人资料</a>
+            </p>
+            <p>
+                <a href="/webapp/agentshop/index?id=@Model.Id" class="i_icon agent_link">我的商城</a>
+            </p>
             </section>
         </div>
     </article>

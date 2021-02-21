@@ -40,7 +40,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
         public ActionResult Index(int? id)
         {
             //1.2根据注册的微信id去用户表中匹配是否有此员工
-            Wechat_AgentEntity agentEntity = agentBll.GetEntityByOpenId(CurrentWxUser.OpenId);//"oQU_IwcWO42_aBNVXcVzungZA0uw"
+            Wechat_AgentEntity agentEntity = agentBll.GetEntityByOpenId("o7HEd1LjnupfP0BBBMz5f69MFYVE");//
             if (agentEntity == null)
             {
                 int? tid = null;
@@ -55,11 +55,6 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                         }
                     }
                 }
-                //else
-                //{
-                //    tid = 6;
-                //    id = 21;//默认
-                //}
 
                 agentEntity = new Wechat_AgentEntity()
                 {
@@ -75,36 +70,6 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                     LV = "普通代理"
                 };
                 agentBll.SaveForm(null, agentEntity);
-            }
-
-            ViewBag.V1Count = 0;
-            ViewBag.V1Commission = 0;
-            ViewBag.V2Count = 0;
-            ViewBag.V2Commission = 0;
-            ViewBag.V3Count = 0;
-            ViewBag.V3Commission = 0;
-
-            var agentList = agentBll.GetSumItem(agentEntity.Id);
-            if (agentList.Count() > 0)
-            {
-                foreach (var item in agentList)
-                {
-                    if (item.LV == "普通代理")
-                    {
-                        ViewBag.V1Count = item.childcount;
-                        ViewBag.V1Commission = item.childprofit;
-                    }
-                    else if (item.LV == "黄金代理")
-                    {
-                        ViewBag.V2Count = item.childcount;
-                        ViewBag.V2Commission = item.profit;
-                    }
-                    else if (item.LV == "钻石代理")
-                    {
-                        ViewBag.V3Count = item.childcount;
-                        ViewBag.V3Commission = item.profit;
-                    }
-                }
             }
             return View(agentEntity);
         }
@@ -368,6 +333,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
         /// 个人资料
         /// </summary>
         /// <returns></returns>
+        [HttpGet]
         public ActionResult profile(int? id)
         {
             return View();
@@ -439,6 +405,51 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
             }
             return Content(fullDir1);
         }
-        
+
+
+
+        /// <summary>
+        /// 售价浮动
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult fudong(int? id)
+        {
+            return View();
+        }
+        /// <summary>
+        /// 售价浮动
+        /// </summary>
+        /// <returns></returns>
+        [HttpPost]
+        public ActionResult fudong(decimal? fuDong)
+        {
+            ReturnJson returnJson = new ReturnJson();
+            try
+            {
+                var agentEntity = agentBll.GetEntityByOpenId(CurrentWxUser.OpenId);
+                if (agentEntity != null)
+                {
+                    Wechat_AgentEntity entity = new Wechat_AgentEntity()
+                    {
+                        FuDong = fuDong,
+                    };
+                    agentBll.FuDongUpdate(agentEntity.Id, fuDong);
+
+                    returnJson.msg = "success";
+                    returnJson.code = 200;
+                    return Json(returnJson);
+                }
+                else
+                {
+                    var root = new ReturnJson { code = 401, msg = "fail" };
+                    return Json(root);
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
     }
 }

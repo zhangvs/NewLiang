@@ -33,6 +33,15 @@ namespace HZSoft.Application.Web.Areas.CustomerManage.Controllers
             return View();
         }
         /// <summary>
+        /// 公海
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        public ActionResult GongHai()
+        {
+            return View();
+        }
+        /// <summary>
         /// 表单页面
         /// </summary>
         /// <returns></returns>
@@ -72,6 +81,27 @@ namespace HZSoft.Application.Web.Areas.CustomerManage.Controllers
         {
             var watch = CommonHelper.TimerStart();
             var data = telphoneliangh5bll.GetPageList(pagination, queryJson);
+            var jsonData = new
+            {
+                rows = data,
+                total = pagination.total,
+                page = pagination.page,
+                records = pagination.records,
+                costtime = CommonHelper.TimerEnd(watch)
+            };
+            return ToJsonResult(jsonData);
+        }
+        /// <summary>
+        /// 获取列表
+        /// </summary>
+        /// <param name="pagination">分页参数</param>
+        /// <param name="queryJson">查询参数</param>
+        /// <returns>返回分页列表Json</returns>
+        [HttpGet]
+        public ActionResult GetPageListJsonGongHai(Pagination pagination, string queryJson)
+        {
+            var watch = CommonHelper.TimerStart();
+            var data = telphoneliangh5bll.GetPageListGongHai(pagination, queryJson);
             var jsonData = new
             {
                 rows = data,

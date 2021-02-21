@@ -48,7 +48,7 @@
 
                     <div class="price-box-div">
                         <span class="price-box-div-span price-box-span-title">价格</span>
-                        <span class="price-box-div-span price-box-span-text">￥@Model.CheckPrice</span>
+                        <span class="price-box-div-span price-box-span-text">￥@Model.Price</span>
                     </div>
                     <div class="price-box-div">
                         <span class="price-box-div-span price-box-span-title">话费</span>
@@ -126,7 +126,7 @@
 
         <div class="order-footer" style="border-top:1px solid #FFF ; box-shadow:  2px 2px 2px #999999; ">
 
-            <span class="order-price">￥@Model.CheckPrice </span>
+            <span class="order-price">￥@Model.Price </span>
 
             <span class="order-submit" style="background-color:#ff6600 ;">立即购买</span>
             <div class="clear"></div>
@@ -376,7 +376,7 @@
 
 
             setCookie('orderPhoneNum','@Model.Telphone');
-            
+
                 $.ajax({
                     url: "/webapp/AgentShop/CreateOrder",
                     type: 'post',
@@ -385,7 +385,8 @@
                         TelphoneID: @Model.TelphoneID, Receiver: realname, ContactTel: phonenum, city: city, address: addr, remark: remark,
                         PayType: gateway,
                         Tel:@Model.Telphone,
-                        Price:@Model.CheckPrice,
+                        Price:@Model.Price,
+                        OrganizeId:@Model.OrganizeId,
                         PC: IsPC()
                     },
                     cache: false,
@@ -429,7 +430,7 @@
             console.log($(this).attr('data-value'));
             cl(gateway);
         });
-        
+
 
     });
 

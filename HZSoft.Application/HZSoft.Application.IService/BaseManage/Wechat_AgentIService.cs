@@ -55,6 +55,16 @@ namespace HZSoft.Application.IService.BaseManage
         /// <param name="entity">实体对象</param>
         /// <returns></returns>
         void SaveForm(int? keyValue, Wechat_AgentEntity entity);
+        /// <summary>
+        /// 浏览量自增
+        /// </summary>
+        void SeeCountAdd(int? keyValue);
+        /// <summary>
+        /// 浮动比例调整
+        /// </summary>
+        void FuDongUpdate(int? keyValue, decimal? fuDong);
+
+
         #endregion
     }
 }

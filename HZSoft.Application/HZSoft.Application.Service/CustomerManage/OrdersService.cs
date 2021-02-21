@@ -284,6 +284,7 @@ namespace HZSoft.Application.Service.CustomerManage
                                 if (agent != null)
                                 {
                                     agent.profit += item.profit;//给代理加上佣金
+                                    agent.SellCount += entity.Price;//给代理加上销量
                                     item.status = 2;//已入账
                                     db.Update<Wechat_AgentEntity>(agent);//更新代理表
                                     db.Update<ComissionLogEntity>(item);//更新佣金日志表
