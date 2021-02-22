@@ -280,19 +280,28 @@ namespace HZSoft.Util.Offices
                             headerRow.CreateCell(column.Ordinal).SetCellValue(arrColName[column.Ordinal]);
                             headerRow.GetCell(column.Ordinal).CellStyle = cHeadStyle;
                             //设置列宽
-                            if (row[column].ToString().IndexOf("fa-toggle")>0 || row[column].ToString().IndexOf("span") > 0)
+                            if (row[column].ToString().IndexOf("fa-toggle") > 0 || row[column].ToString().IndexOf("span") > 0)
                             {
                                 sheet.SetColumnWidth(column.Ordinal, 8 * 256);
                             }
-                            else if (column.ColumnName=="Telphone" || column.ColumnName == "Numbers")
+                            else if (column.ColumnName == "Telphone" || column.ColumnName == "Numbers")
                             {
                                 sheet.SetColumnWidth(column.Ordinal, 15 * 256);
                             }
                             else
                             {
-                                sheet.SetColumnWidth(column.Ordinal, (arrColWidth[column.Ordinal] + 1) * 256);
+                                //设置列宽
+                                // sheet.SetColumnWidth(column.Ordinal, (arrColWidth[column.Ordinal] + 1) * 256);
+                                if (arrColWidth[column.Ordinal] > 255)
+                                {
+                                    arrColWidth[column.Ordinal] = 254;
+                                }
+                                else
+                                {
+                                    sheet.SetColumnWidth(column.Ordinal, (arrColWidth[column.Ordinal] + 1) * 256);
+                                }
                             }
-                            
+
                         }
                         #endregion
                     }
@@ -521,7 +530,7 @@ namespace HZSoft.Util.Offices
                 }
                 catch (Exception)
                 {
-                    
+
                     break;
                 }
 
