@@ -99,7 +99,7 @@
                         <tr v-for="item in commissionList">
                             <td v-if="item.invited_agent_id ==0">{{ item.phonenum|mixMobile }}</td>
                             <td v-if="item.invited_agent_id !=0">邀请加盟</td>
-                            <td v-if="item.invited_agent_id ==0">{{ item.indirect == 0 ? '直接(销售)' : '下级(销售)' }}</td>
+                            <td v-if="item.invited_agent_id ==0">{{ item.indirect == 0 ? '直接(销售)' : item.indirect == 2 ? '代售' : item.indirect == 3 ? '本金' : '下级(销售)' }}</td>
                             <td v-if="item.invited_agent_id !=0">{{ item.indirect == 0 ? '直接(加盟)' : '下级(加盟)' }}</td>
                             <td>{{ item.agent_name }}</td>
                             <td>{{ item.profit }}</td>
@@ -114,10 +114,10 @@
             <section class="desc_wrap" v-if="isFetched">
                 <h3>说明：</h3>
                 <p>销售：佣金为销售号码奖励.</p>
-                <p>加盟：佣金为邀请加盟奖励.</p>
+                @*<p>加盟：佣金为邀请加盟奖励.</p>*@
                 <p>未付款：用户尚未支付.</p>
-                <p>已入账：佣金已经进入您的账户.</p>
                 <p>已付款：用户已付款,等待开卡.</p>
+                <p>已入账：佣金已经进入您的账户.</p>
                 <p>用户退款：佣金失效</p>
             </section>
         </div>

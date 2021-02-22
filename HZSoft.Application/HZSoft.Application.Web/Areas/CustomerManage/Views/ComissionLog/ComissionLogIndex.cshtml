@@ -44,7 +44,17 @@
                 {
                     label: "间接返佣", name: "indirect", index: "indirect", width: 80, align: "center", sortable: false,
                     formatter: function (cellvalue) {
-                        return cellvalue == 1 ? "间接" : "直接";
+                        if (cellvalue == 0) {
+                            return "直接销售";
+                        } else if (cellvalue == 1) {
+                            return "下级销售";
+                        } else if (cellvalue == 2) {
+                            return "代售";
+                        } else if (cellvalue == 3) {
+                            return "本金";
+                        } else {
+                            return "";
+                        }
                     }
                 },
                 { label: '间接返佣代理Id', name: 'invited_agent_id', index: 'invited_agent_id', width: 100, align: 'left', sortable: true },

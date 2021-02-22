@@ -222,7 +222,7 @@
         var keyValue = $("#gridTable").jqGridRowValue('Id');
         if (checkedRow(keyValue)) {
             $.ConfirmAjax({
-                msg: "注：您确定【开卡】吗？",
+                msg: "注：您确定【已开卡】吗？",
                 url: "../../CustomerManage/Orders/UpdateState",
                 param: { keyValue: keyValue },
                 success: function (data) {

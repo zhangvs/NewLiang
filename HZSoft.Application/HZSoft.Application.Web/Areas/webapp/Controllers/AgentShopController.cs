@@ -353,7 +353,7 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                                 indirect = 0,
                                 invited_agent_id = 0,
                                 phonenum = ordersEntity.Tel,
-                                profit = ordersEntity.Price - ordersEntity.Price * direct,//佣金=原价格-原价格*折扣
+                                profit = ordersEntity.Price * direct,//佣金=原价格-原价格*折扣
                                 status = 0,
                                 orderno = ordersEntity.OrderSn,
                                 orderid = ordersEntity.Id
@@ -397,10 +397,10 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                                     {
                                         agent_id = entity.Id,
                                         agent_name = entity.nickname,
-                                        indirect = 1,
+                                        indirect = 2,//代售
                                         invited_agent_id = 0,
                                         phonenum = ordersEntity.Tel,
-                                        profit = ordersEntity.Price - ordersEntity.Price * 0.3M,//佣金=原价格-原价格*折扣
+                                        profit = ordersEntity.Price * 0.3M,//佣金=原价格-原价格*折扣
                                         status = 0,
                                         orderno = ordersEntity.OrderSn,
                                         orderid = ordersEntity.Id
@@ -422,10 +422,10 @@ namespace HZSoft.Application.Web.Areas.webapp.Controllers
                                 {
                                     agent_id = tidEntity.Id,
                                     agent_name = tidEntity.nickname,
-                                    indirect = 1,
+                                    indirect = 3,//本金
                                     invited_agent_id = 0,
                                     phonenum = ordersEntity.Tel,
-                                    profit = ordersEntity.Price - direct - indirect - ordersEntity.Price * 0.01M,//本金=售价-佣金合计-售价0.01
+                                    profit = ordersEntity.Price - ordersEntity.Price*direct - ordersEntity.Price*indirect - ordersEntity.Price * 0.01M,//本金=售价-佣金合计-售价0.01
                                     status = 0,
                                     orderno = ordersEntity.OrderSn,
                                     orderid = ordersEntity.Id
