@@ -34,7 +34,7 @@ namespace HZSoft.Application.Entity.CustomerManage
         /// <returns></returns>
         public DateTime? created_at { get; set; }
         /// <summary>
-        /// 间接标识
+        /// 0直接销售，1间接销售，2代售，3本金
         /// </summary>
         /// <returns></returns>
         public int? indirect { get; set; }

@@ -52,7 +52,7 @@ namespace HZSoft.Application.IService.CustomerManage
         void SaveForm(int? keyValue, OrdersEntity entity);
         void SaveSendForm(int? keyValue, OrdersEntity entity);
         OrdersEntity SaveForm(OrdersEntity entity);
-        void UpdateSendState(int? keyValue);
+        void UpdateSendState(int? keyValue, int? Status);
         #endregion
     }
 }

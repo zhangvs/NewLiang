@@ -39,6 +39,14 @@ namespace HZSoft.Application.Web.Areas.CustomerManage.Controllers
 
 
         /// <summary>
+        /// 开卡
+        /// </summary>
+        /// <returns></returns>
+        public ActionResult KaForm()
+        {
+            return View();
+        }
+        /// <summary>
         /// 发货
         /// </summary>
         /// <returns></returns>
@@ -140,16 +148,16 @@ namespace HZSoft.Application.Web.Areas.CustomerManage.Controllers
         }
 
         /// <summary>
-        /// 开卡
+        /// 开卡,修改状态
         /// </summary>
         /// <param name="keyValue">主键值</param>
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
         [AjaxOnly]
-        public ActionResult UpdateState(int? keyValue)
+        public ActionResult UpdateState(int? keyValue, int? Status)
         {
-            ordersbll.UpdateSendState(keyValue);
+            ordersbll.UpdateSendState(keyValue,Status);
             return Success("操作成功。");
         }
         #endregion

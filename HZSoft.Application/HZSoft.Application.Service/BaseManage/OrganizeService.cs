@@ -403,17 +403,19 @@ SELECT OrganizeId,Img1,Img2,Img3,Img4 FROM T where DeleteMark <> 1 and ParentId=
                         //更新id，0级机构上级和顶级都是本机构
                         agentEntity.Pid = agentEntity.Id;
                         agentEntity.Tid = agentEntity.Id;
+                        agentEntity.Category = 0;//改为0级代理
                         agentService.SaveForm(agentEntity.Id, agentEntity);
                     }
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(agentEntity.OrganizeId))
+                    if (!string.IsNullOrEmpty(agentEntity.OrganizeId))
                     {
                         agentEntity.OrganizeId = organizeEntity.OrganizeId;//如果不存在代理机构id，
                         //更新id，0级机构上级和顶级都是本机构
                         agentEntity.Pid = agentEntity.Id;
                         agentEntity.Tid = agentEntity.Id;
+                        agentEntity.Category = 0;//改为0级代理
                         db.Update(agentEntity);
                     }
                 }

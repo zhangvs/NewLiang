@@ -136,11 +136,11 @@ namespace HZSoft.Application.Busines.CustomerManage
         /// <param name="keyValue">主键值</param>
         /// <param name="entity">实体对象</param>
         /// <returns></returns>
-        public void UpdateSendState(int? keyValue)
+        public void UpdateSendState(int? keyValue, int? Status)
         {
             try
             {
-                service.UpdateSendState(keyValue);
+                service.UpdateSendState(keyValue, Status);
             }
             catch (Exception)
             {

@@ -255,45 +255,51 @@ namespace HZSoft.Application.Service.CustomerManage
             }
         }
         /// <summary>
-        /// 开卡
+        /// 开卡,修改状态
         /// </summary>
         /// <param name="keyValue">主键值</param>
         /// <returns></returns>
-        public void UpdateSendState(int? keyValue)
+        public void UpdateSendState(int? keyValue, int? Status)
         {
             IRepository db = new RepositoryFactory().BaseRepository().BeginTrans();
             try
             {
                 if (!string.IsNullOrEmpty(keyValue.ToString()))
                 {
-                    OrdersEntity entity = GetEntity(keyValue);
-                    entity.Modify(keyValue);
-                    entity.Status = 3;//开发，订单已完成
-                    this.BaseRepository().Update(entity);
-
-                    //如果是分销订单，进行佣金的入账操作
-                    if (entity.OrderSn.Contains("FX-"))
+                    OrdersEntity oldEntity = GetEntity(keyValue);
+                    //如果开卡完成，处理佣金入账,第一次开卡才操作
+                    if (oldEntity.Status!=3 && Status == 3)
                     {
-                        var list = db.FindList<ComissionLogEntity>(t => t.orderno == entity.OrderSn);
-                        if (list.Count() > 0)
+                        //如果是分销订单，进行佣金的入账操作
+                        if (oldEntity.OrderSn.Contains("FX-"))
                         {
-                            //需要等到开卡之后再返佣入账
-                            foreach (var item in list)
+                            var list = db.FindList<ComissionLogEntity>(t => t.orderno == oldEntity.OrderSn);
+                            if (list.Count() > 0)
                             {
-                                var agent = db.FindEntity<Wechat_AgentEntity>(t => t.Id == item.agent_id);
-                                if (agent != null)
+                                //需要等到开卡之后再返佣入账
+                                foreach (var item in list)
                                 {
-                                    agent.profit += item.profit;//给代理加上佣金
-                                    agent.SellCount += entity.Price;//给代理加上销量
-                                    item.status = 2;//已入账
-                                    db.Update<Wechat_AgentEntity>(agent);//更新代理表
-                                    db.Update<ComissionLogEntity>(item);//更新佣金日志表
+                                    var agent = db.FindEntity<Wechat_AgentEntity>(t => t.Id == item.agent_id);
+                                    if (agent != null)
+                                    {
+                                        agent.profit += item.profit;//给代理加上佣金
+                                        item.status = 2;//已入账
+                                        if (item.indirect == 0)
+                                        {
+                                            agent.SellCount += oldEntity.Price;//直接销售，给代理加上销量
+                                        }
+                                        db.Update<Wechat_AgentEntity>(agent);//更新代理表
+                                        db.Update<ComissionLogEntity>(item);//更新佣金日志表
+                                    }
                                 }
+                                db.Commit();
                             }
-                            db.Commit();
                         }
                     }
 
+                    oldEntity.Modify(keyValue);
+                    oldEntity.Status = Status;//更新订单状态
+                    this.BaseRepository().Update(oldEntity);
                 }
             }
             catch (Exception)

@@ -55,6 +55,10 @@
                             return "待开卡";
                         } else if (cellvalue == 3) {
                             return "已完成";
+                        } else if (cellvalue == 4) {
+                            return "资料待审";
+                        } else if (cellvalue == 5) {
+                            return "资料无效";
                         } else {
                             return "";
                         }
@@ -217,16 +221,26 @@
         }
     }
 
-    //发货
+    //开卡
     function btn_ka() {
         var keyValue = $("#gridTable").jqGridRowValue('Id');
         if (checkedRow(keyValue)) {
-            $.ConfirmAjax({
-                msg: "注：您确定【已开卡】吗？",
-                url: "../../CustomerManage/Orders/UpdateState",
-                param: { keyValue: keyValue },
-                success: function (data) {
-                    $("#gridTable").trigger("reloadGrid");
+            //$.ConfirmAjax({
+            //    msg: "注：您确定【已开卡】吗？",
+            //    url: "../../CustomerManage/Orders/UpdateState",
+            //    param: { keyValue: keyValue },
+            //    success: function (data) {
+            //        $("#gridTable").trigger("reloadGrid");
+            //    }
+            //})
+            dialogOpen({
+                id: 'SendForm',
+                title: '开卡',
+                url: '../../CustomerManage/Orders/KaForm?keyValue=' + keyValue,
+                width: '400px',
+                height: '400px',
+                callBack: function (iframeId) {
+                    top.frames[iframeId].AcceptClick();
                 }
             })
         }
@@ -309,6 +323,8 @@
                                                 <li data-value="1">待发货</li>
                                                 <li data-value="2">待开卡</li>
                                                 <li data-value="3">已完成</li>
+                                                <li data-value="4">资料待审</li>
+                                                <li data-value="5">资料无效</li>
                                             </ul>
                                         </div>
                                     </td>

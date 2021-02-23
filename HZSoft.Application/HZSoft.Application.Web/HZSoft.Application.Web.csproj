@@ -2068,6 +2068,7 @@
     <Content Include="Areas\BaseManage\Views\User\Top.cshtml" />
     <Content Include="Areas\CustomerManage\Views\TelphoneLiangH5\GongHai.cshtml" />
     <Content Include="Areas\webapp\Views\Agent\fudong.cshtml" />
+    <Content Include="Areas\CustomerManage\Views\Orders\KaForm.cshtml" />
     <None Include="Properties\PublishProfiles\165.pubxml" />
     <None Include="Properties\PublishProfiles\6.1.pubxml" />
     <Content Include="Areas\FlowManage\Views\FlowLaunch\Index.cshtml" />
